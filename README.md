@@ -8,3 +8,6 @@ This is a boilerplate for micronaut using the following features:
   - Tomcat Connection Pool
 - Containerize scripts and DB
 
+### 1-MySQLDB branch
+- Add dependencies in [build.gradle](/build.gradle)
+- 

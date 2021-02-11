@@ -9,7 +9,7 @@ import spock.lang.Specification
 import javax.inject.Inject
 
 @MicronautTest
-class HelloControllerTest extends Specification {
+class HelloControllerSpec extends Specification {
 
     @Inject
     @Client("/")
