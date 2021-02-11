@@ -37,9 +37,6 @@ dependencies {
     // Connection Pool
     runtimeOnly("org.apache.tomcat:tomcat-jdbc")
     implementation("io.micronaut.sql:micronaut-jdbc-tomcat")
-
-    // ********************* Security
-    implementation "org.springframework.security:spring-security-crypto:${springSecurityCryptoVersion}"
 }
 
 
