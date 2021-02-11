@@ -7,7 +7,6 @@ micronaut:
 dataSource:
   #  dbCreate: none, update, or create-drop
   dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-  dbCreate: update
   url: ${MYSQL_URL:`jdbc:mysql://localhost:6603/demo?useSSL=false`}
   username: ${MYSQL_USER:demouser}
   password: ${MYSQL_PASSWORD:demopasswd}
@@ -19,9 +18,16 @@ dataSource:
 
 hibernate:
   show_sql: false
-#  hbm2ddl:
-#    auto: create-drop
+  hbm2ddl:
+    auto: none
   cache:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
+
+flyway:
+  datasources:
+    default:
+      locations:
+        - classpath:dbmigrations
+      baseline-on-migrate: true

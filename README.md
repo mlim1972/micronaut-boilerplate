@@ -21,3 +21,13 @@ source set-env-vars.sh
 ./run-mysql.sh
 ```
 
+### 2-Flyway branch
+- Added Flyway
+- Updated [application.yml](/src/main/resources/application.yml) to use Flyway
+and to disable auto generating tables by setting the `hbm2ddl.auto` to none
+- Added [V1__setting_user_table.sql](/src/main/resources/dbmigrations/V1__setting_user_table.sql)
+as the first schema creation that flyway will generate
+
+Restart your db by running `./run-mysql.sh` so the db is clean and once you
+start your application: `./gradlew run`, you will see a flyway_schema_history
+table.

@@ -37,6 +37,9 @@ dependencies {
     // Connection Pool
     runtimeOnly("org.apache.tomcat:tomcat-jdbc")
     implementation("io.micronaut.sql:micronaut-jdbc-tomcat")
+
+    // Flyway
+    implementation("io.micronaut.flyway:micronaut-flyway")
 }
 
 
