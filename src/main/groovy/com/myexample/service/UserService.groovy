@@ -1,6 +1,7 @@
 package com.myexample.service
 
 import com.myexample.domain.User
+import com.myexample.security.PasswordEncoder
 import com.myexample.service.gorm.UserGormService
 import grails.gorm.transactions.Transactional
 import groovy.transform.CompileStatic
@@ -13,10 +14,12 @@ import javax.inject.Singleton
 @Transactional
 @Slf4j
 class UserService {
-    UserGormService userGormService
+    protected final UserGormService userGormService
+    protected final PasswordEncoder passwordEncoder
 
-    UserService(UserGormService userGormService){
+    UserService(UserGormService userGormService, PasswordEncoder passwordEncoder){
         this.userGormService = userGormService
+        this.passwordEncoder = passwordEncoder
     }
 
     User findUserByEmail(String email){
@@ -28,6 +31,7 @@ class UserService {
     }
 
     User saveUser(String email, String password){
-        userGormService.save(email, password)
+        final String encodedPassword = passwordEncoder.encode(password)
+        userGormService.save(email, encodedPassword)
     }
 }

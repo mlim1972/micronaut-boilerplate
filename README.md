@@ -31,3 +31,15 @@ as the first schema creation that flyway will generate
 Restart your db by running `./run-mysql.sh` so the db is clean and once you
 start your application: `./gradlew run`, you will see a flyway_schema_history
 table.
+
+### 3-Flyway_and_Encryption
+- Using Flyway Groovy script for things that cannot be done by SQL
+- Added a flyway script [V1_1__seed_users](/src/main/groovy/com/myexample/dbmigrationscript/V1_1__seed_users.groovy)
+This script seeds a user by using the password encoder to hash the password before
+sending to the db.
+- Added Spring Security Crypt to get the hashing algorithm to use for password in the build file
+- Created classes under the [security](/src/main/groovy/com/myexample/security) folder to
+deal with password encoding
+- Updated the [UserService](/src/main/groovy/com/myexample/service/UserService.groovy) to
+encode the password before it gets to the DB. Since every other code should be using
+the service, this is the single point to encode the password  

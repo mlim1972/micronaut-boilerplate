@@ -40,6 +40,9 @@ dependencies {
 
     // Flyway
     implementation("io.micronaut.flyway:micronaut-flyway")
+
+    // ********************** Spring Security Crypto
+    implementation "org.springframework.security:spring-security-crypto:${springSecurityCryptoVersion}"
 }
 
 

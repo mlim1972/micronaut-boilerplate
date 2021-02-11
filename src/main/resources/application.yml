@@ -30,4 +30,5 @@ flyway:
     default:
       locations:
         - classpath:dbmigrations
+        - classpath:com/myexample/dbmigrationscript
       baseline-on-migrate: true
