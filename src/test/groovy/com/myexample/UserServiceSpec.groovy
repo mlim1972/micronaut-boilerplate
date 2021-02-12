@@ -11,33 +11,47 @@ class UserServiceSpec extends Specification {
     @Inject
     UserService userService
 
-    String email = "user1@company.com"
-    String password = 'password'
+
 
     void "save user"(){
+        given:
+        String email = "user1@company.com"
+        String password = 'password'
+
         when:
         def user = userService.saveUser(email, password)
 
         then:
         user.id > 0
         user.email == email
-        user.password == password
+        user.password != password
     }
 
     void "find user created"(){
+        given:
+        String email = "user4@company.com"
+        String password = 'password'
+        def curList = userService.findAll()
+
         when:
         def user = userService.saveUser(email, password)
 
         then:
         user.id > 0
         user.email == email
-        user.password == password
+        user.password != password
 
         when:
         def users = userService.findAll()
 
         then:
-        users.size() == 1
-        users[0].email == email
+        users.size() == curList.size() + 1
+
+        when:
+        def user2 = userService.findUserByEmail(email)
+
+        then:
+        user2
+        user2.email == email
     }
 }
