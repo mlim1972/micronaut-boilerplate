@@ -11,7 +11,13 @@ fi
 version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/"//g')
 #version=1.0
 
+# AWS info
+export AWS_ACCOUNT_NUMBER=xxxxxxxxxx
+export AWS_DEFAULT_REGION=us-west-2
+
 # Set docker container env vars
+export CONTAINER_NAME=demo-instance
+export IMAGE_NAME=my-demo
 export MYSQL_CONTAINER_NAME=my-mysql
 
 # Set MySQL env vars

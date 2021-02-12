@@ -42,4 +42,21 @@ sending to the db.
 deal with password encoding
 - Updated the [UserService](/src/main/groovy/com/myexample/service/UserService.groovy) to
 encode the password before it gets to the DB. Since every other code should be using
-the service, this is the single point to encode the password  
+the service, this is the single point to encode the password 
+  
+### 4-Docker
+This is branch contains shell script to build, run, and create the container for
+our application
+
+- [Dockerfile](/Dockerfile). This file setup the necessary conf. to create the image
+- [build-image](/build-image.sh). This script will run and create the image file. This
+  script can be used during your CI process to build the image
+- [ecr-push-image.sh](/ecr-push-image.sh). This is a sample script that shows how to push
+  an image to ECR. You will need to do something similar during CI
+- [run-image.sh](/run-image.sh). This is script is just to test your image once you build
+  it to validate your Docker and build image process. This will not be use in CI but will
+  serve as an example when you want to deploy it
+- [set-env-vars.sh](/set-env-vars.sh). This file was modified to reflect env. variables
+  for AWS access. The most important is your AWS Account number so, that it can tag your
+  image appropriately.
+  
