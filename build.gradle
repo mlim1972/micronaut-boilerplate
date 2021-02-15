@@ -43,6 +43,10 @@ dependencies {
 
     // ********************** Spring Security Crypto
     implementation "org.springframework.security:spring-security-crypto:${springSecurityCryptoVersion}"
+
+    // ********************** Micronaut Security
+    implementation("io.micronaut.security:micronaut-security")
+    implementation("io.micronaut.security:micronaut-security-jwt")
 }
 
 

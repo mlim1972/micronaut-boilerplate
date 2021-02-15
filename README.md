@@ -60,3 +60,18 @@ our application
   for AWS access. The most important is your AWS Account number so, that it can tag your
   image appropriately.
   
+### 5-JWT
+This branch show how to use the Micronaut JWT security feature.  We need to create
+roles and provide different delegates to provide the authentication needed. We are using
+JWT token to provide login authentication. The code also includes a custom header as part
+of the authentication token. Here are the list of changes:
+- Updated all Controllers to add the `@Secured` annotation to Anonymous or Authenticated
+- Protected controller is an example of a controller needed authentication to access it.
+It also shows how to get the current logon user and whatever extra information from the JWT
+token
+- Added Delegates to the [security](/src/main/groovy/com/myexample/security) folder
+- Updated the [application.yml](/src/main/resources/application.yml) file to user 
+JWT as authentication
+- Added a new dbmigration to add roles and to the DB
+- Added role related domain objects and services
+- Updated the [build.gradle](/build.gradle) to include the security libraries for JWT

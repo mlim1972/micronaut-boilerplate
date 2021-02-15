@@ -1,6 +1,27 @@
 micronaut:
   application:
     name: demo
+  security:
+    enabled: true
+    endpoints:
+      login:
+        enabled: true
+      logout:
+        enabled: false
+      oauth:
+        enabled: false
+    authentication: bearer
+    token:
+      jwt:
+        generator:
+          access-token:
+            expiration: ${APPFACTORY_ACCESS_TOKEN_EXPIRATION:18000}  # 5 hours
+        cookie:
+          enabled: false
+        signatures:
+          secret:
+            generator:
+              secret: ${APPFACTORY_JWT_SECRET:X4Tc6Qa5Cr<6xt{eZ/3AC93|B5iF]0;G0vH+AT=g*{5/_93)q,*M[T8Jbispbd5vb6S-4[f^}
 
 ############################# DB ################################
 

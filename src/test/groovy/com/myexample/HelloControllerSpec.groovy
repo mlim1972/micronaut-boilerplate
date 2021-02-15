@@ -1,4 +1,4 @@
-package com.myexample.controller
+package com.myexample
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.RxHttpClient
