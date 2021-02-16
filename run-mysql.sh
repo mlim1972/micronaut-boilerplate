@@ -20,13 +20,13 @@ docker run -d --name="$MYSQL_CONTAINER_NAME" --env="MYSQL_ROOT_PASSWORD=root" -p
 #wait for mysql server to come up
 while true; do
   echo "Waiting for MySQL container to come up..."
-  mysql -h "$HOST_IP" -P 6603 -uroot -proot -e "quit" > /dev/null 2>&1
+  docker exec -i "$MYSQL_CONTAINER_NAME" mysql -h "$HOST_IP" -P 6603 -uroot -proot -e "quit" > /dev/null 2>&1
   if [ "$?" -eq 0 ];
   then
     echo "Connected to MySQL"
     break
   else
-    sleep 3s
+    sleep 5s
   fi
 done
 
