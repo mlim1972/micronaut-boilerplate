@@ -12,8 +12,19 @@ version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/
 #version=1.0
 
 # AWS info
-export AWS_ACCOUNT_NUMBER=xxxxxxxxxx
-export AWS_DEFAULT_REGION=us-west-2
+if [ -z "${AWS_ACCOUNT_NUMBER}" ]; then
+  export AWS_ACCOUNT_NUMBER=xxxxxxxxxx
+else
+  echo "‘AWS_ACCOUNT_NUMBER’ variable is set to: $AWS_ACCOUNT_NUMBER"
+fi
+
+if [ -z "${AWS_REGION}" ]; then
+  export AWS_REGION=us-west-2
+else
+  echo "‘AWS_REGION’ variable is set to: AWS_DEFAULT_REGION"
+fi
+
+export IMAGE_VERSION=$version
 
 # Set docker container env vars
 export CONTAINER_NAME=demo-instance

@@ -4,7 +4,7 @@ hostIp=$(hostname -I | awk -v OFS=' ' '{print $1}')
 #hostIp=127.0.0.1
 
 # get version from build.gradle
-version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/"//g')
+#version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/"//g')
 # Using static value because of issue #13035
 #version=1.0
 
@@ -28,8 +28,8 @@ docker build --add-host="$MYSQL_CONTAINER_NAME":"$hostIp" \
   --build-arg MYSQL_USER="$MYSQL_USER" \
   --build-arg MYSQL_PASSWORD="$MYSQL_PASSWORD" \
   --rm -f "Dockerfile" \
-  -t "$IMAGE_NAME":"$version-qa" \
-  -t "$AWS_ACCOUNT_NUMBER".dkr.ecr.us-west-2.amazonaws.com/"$IMAGE_NAME":"$version-qa" \
+  -t "$IMAGE_NAME":"$IMAGE_VERSION-qa" \
+  -t "$AWS_ACCOUNT_NUMBER".dkr.ecr.us-west-2.amazonaws.com/"$IMAGE_NAME":"$IMAGE_VERSION-qa" \
   "."
 
 echo "Docker image built: $CONTAINER_NAME"

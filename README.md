@@ -75,3 +75,27 @@ JWT as authentication
 - Added a new dbmigration to add roles and to the DB
 - Added role related domain objects and services
 - Updated the [build.gradle](/build.gradle) to include the security libraries for JWT
+
+### 6-CI
+This branch has changes for the CI process. We are using GitHub actions and as so, you
+will find a [.github/workflows/ci-build.yaml](.github/workflows/ci-build.yaml). This 
+file is use by GitHub to perform Actions upon certain events. 
+Changes are as follows:
+- [ci-build.yaml](.github/workflows/ci-build.yaml). GitHub Action to perfom a CI build
+whenever a merge or PR is done in the dev branch. This means, you need to have a dev
+branch where you will merge all your code for integration testing.
+This file relies on secrets that need to be setup as part of your repo:  
+```bash
+# These environment variables come from GitHub Secrets. Configure them!!!
+AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+AWS_REGION: ${{ secrets.AWS_REGION }}
+AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+```  
+- [build-image.sh](build-image.sh). This file was changed to reflect the environment
+variables it will use.
+- [ecr-push-image.sh](ecr-push-image.sh). This file was changed to reflect the environment
+variable it will use.
+- [set-env-vars.sh](set-env-vars.sh). This file was changed to add AWS related env. variables  
+- [set-gh-actions-evn-vars.sh](set-gh-actions-env-vars.sh). This file is used by GitHub to set
+environment variables in the VM running your workflow
