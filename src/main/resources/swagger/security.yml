@@ -1,0 +1,58 @@
+paths:
+  /login:
+    post:
+      summary: Login endpoint to get a Bearer token
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  format: email
+                  description: The username is the user's email address
+                password:
+                  type: string
+                  description: The user's password
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: JWT bearer to use for protected resources.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWToken'
+
+components:
+  schemas:
+    JWToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token to use as bearer in the Authorization header
+          example: uwnvw442jwjsjs
+        expires_in:
+          type: integer
+          description: The expiration of the access token in seconds
+          example: 18000
+        sampleData:
+          type: string
+          description: Arbitrary data set by the server
+          example: MY DATA
+        token_type:
+          type: string
+          description: the token type. This is always 'Bearer'
+          example: Bearer
+        userId:
+          type: integer
+          description: The user id representing the user in the server
+          example: 1232
+        username:
+          type: string
+          description: The username used to login. In this case it is the same as the email address
+          example: user@email.com

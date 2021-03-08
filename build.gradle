@@ -47,6 +47,12 @@ dependencies {
     // ********************** Micronaut Security
     implementation("io.micronaut.security:micronaut-security")
     implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation("io.micronaut.security:micronaut-security-oauth2")
+
+    // ********************** OpenAPI
+    implementation("io.micronaut.openapi:micronaut-openapi:2.3.1")
+    implementation("io.swagger.core.v3:swagger-annotations")
+
 }
 
 
@@ -59,5 +65,10 @@ java {
     targetCompatibility = JavaVersion.toVersion("11")
 }
 
+tasks.withType(GroovyCompile) {
+    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+    groovyOptions.forkOptions.jvmArgs.add('-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop')
+    groovyOptions.forkOptions.jvmArgs.add('-Dmicronaut.openapi.additional.files=src/main/resources/swagger')
+}
 
 

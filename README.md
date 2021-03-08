@@ -99,3 +99,18 @@ variable it will use.
 - [set-env-vars.sh](set-env-vars.sh). This file was changed to add AWS related env. variables  
 - [set-gh-actions-evn-vars.sh](set-gh-actions-env-vars.sh). This file is used by GitHub to set
 environment variables in the VM running your workflow
+
+### 7-OpenAPI
+This branch offers information about enabling OpenAPI and using the swagger UI to interact
+with the available end points. Here is the list of changes:
+- [build.gradle](/build.gradle). Add libraries related to OpenAPI and passes configuration for
+OpenAPI via the jvm arguments
+- [Application.groovy](/src/main/groovy/com/myexample/Application.groovy). Annotation definition
+for the project using the OpenAPI annotation to configure the main application
+- [ProtectedController](/src/main/groovy/com/myexample/controller/ProtectedController.groovy). 
+Controller for protected resource. This controller is now using the OpenAPI annotation to specify
+more information about the endpoint
+- [application.yml](/src/main/resources/application.yml). Application-wide configuration to enable
+OpenAPI, static route to swagger, and allow anonymous access to the swagger folders.
+- [security.yml](/src/main/resources/swagger/security.yml). Extra swagger file to expose the login
+controller via swagger. This way, the login can also be done via the swagger-ui
