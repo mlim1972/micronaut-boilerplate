@@ -18,7 +18,7 @@ import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import org.reactivestreams.Publisher
 
-import javax.annotation.Nullable
+import io.micronaut.core.annotation.Nullable
 import javax.inject.Named
 import javax.inject.Singleton
 import java.util.concurrent.ExecutorService

@@ -114,3 +114,60 @@ more information about the endpoint
 OpenAPI, static route to swagger, and allow anonymous access to the swagger folders.
 - [security.yml](/src/main/resources/swagger/security.yml). Extra swagger file to expose the login
 controller via swagger. This way, the login can also be done via the swagger-ui
+
+### 8-HealthCheck
+#### Health Check and Monitoring
+Micronaut has a management feature that can be added to the [build.gradle](/build.gradle) file.
+Once the library is added, we can enable the management endpoint in the 
+[application.yml](/src/main/resources/application.yml) file. Currently, this application
+is only enabling the following endpoints:
+
+- /health -> provides health check information about the application
+- /info -> specific custom info. Right now, there is nothing sent but you can add your custom information
+- /threaddump -> this sends the thread dump for the application
+
+More information and other endpoints can be found in the 
+[Micronaut documentation](https://docs.micronaut.io/2.3.1/guide/index.html#management) and
+[Micronaut Micrometer with Prometheus](https://micronaut-projects.github.io/micronaut-micrometer/latest/guide/#metricsAndReportersPrometheus).
+
+In addition to management information, this boilerplate is configured to also provide metric information 
+when accessing /metrics. However, to get full benefit of it, this application has also enabled the 
+[prometheus](https://prometheus.io/) endpoint /prometheus so that prometheus could access the metric information. 
+There is no extra configuration or code needed to provide these metrics. To see how the metrics are sent 
+to prometheus, a [docker-compose.yaml](/prometheus/docker-compose.yaml) file is setup under 
+[/prometheus](/prometheus). The docker compose brings up the following services:
+
+- [prometheus](https://prometheus.io/). Provides metrics and alerting.
+- [Node Exporter](https://github.com/prometheus/node_exporter). Provides hardware and OS metrics.
+- [cAdvisor](https://github.com/google/cadvisor). Exposes container and hardware statistics to prometheus.
+- [Grafana](https://grafana.com/). Graph and dashboard that can connect to prometheus.
+
+The [/prometheus/prometheus yaml](/prometheus/prometheus.yml) configuration would need to change for your environment. 
+Currently, the last line uses an IP address that is likely not the same for your development environment. 
+You need to change this to your own machines's IP (No, localhost will NOT work).
+
+In order to run the docker compose file, you need to just run it in the command line:
+
+```shell
+$ cd prometheus
+$ docker-compose up
+```
+Prometheus URL: http://localhost:9090/
+
+Grafana URL: http://localhost:3000 
+
+Grafana credentials:
+- Username: admin
+- Password: changeme (setup via env. variable **GF_SECURITY_ADMIN_PASSWORD** from the
+  [docker-compose.yaml](/prometheus/docker-compose.yaml) file)
+
+#### Micronaut upgrade
+In addition to the management endpoints, this branch upgraded to micronaut 2.5.4. The following are
+the files affected:
+- [gradle folder](/gradle)
+- [build.gradle](build.gradle)
+- [gradlew](gradlew)
+- [gradlew.bat](gradlew.bat)
+- [gradle.properties](gradle.properties)
+
+Other upgrades include the [Dockerfile](Dockerfile) to use Gradle 7 and JDK 11.0.11 

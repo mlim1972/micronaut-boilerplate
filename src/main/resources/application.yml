@@ -41,6 +41,28 @@ micronaut:
           secret:
             generator:
               secret: ${APPFACTORY_JWT_SECRET:X4Tc6Qa5Cr<6xt{eZ/3AC93|B5iF]0;G0vH+AT=g*{5/_93)q,*M[T8Jbispbd5vb6S-4[f^}
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+        descriptions: true
+        step: PT1M
+
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS
+  info:
+    enabled: true
+    sensitive: false
+  threaddump:
+    enabled: true
+    sensitive: false
+  prometheus:
+    enabled: true
+    sensitive: false
 
 ############################# DB ################################
 

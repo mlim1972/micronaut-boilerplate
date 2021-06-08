@@ -1,5 +1,5 @@
 
-FROM gradle:6.8.2-jre11 AS build-env
+FROM gradle:7.0.2-jre11 AS build-env
 
 # Set build arguments from build-image.sh
 ARG MYSQL_URL
@@ -14,7 +14,7 @@ COPY --chown=gradle:gradle . ./
 # Compile the application.
 RUN gradle build --no-daemon
 
-FROM openjdk:11.0.10-jre-slim-buster
+FROM openjdk:11.0.11-jre-slim-buster
 # Using distroless
 #FROM gcr.io/distroless/java:11
 

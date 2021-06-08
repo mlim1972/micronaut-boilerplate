@@ -9,7 +9,7 @@ import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator
 import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator
 
-import javax.annotation.Nullable
+import io.micronaut.core.annotation.Nullable
 
 /**
  * Replacing bean `JWTClaimsSetGenerator`

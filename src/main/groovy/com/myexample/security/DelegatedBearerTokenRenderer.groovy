@@ -1,6 +1,6 @@
 package com.myexample.security
 
-import edu.umd.cs.findbugs.annotations.Nullable
+import io.micronaut.core.annotation.Nullable
 import io.micronaut.context.annotation.Replaces
 import io.micronaut.http.HttpHeaderValues
 import io.micronaut.security.authentication.UserDetails
