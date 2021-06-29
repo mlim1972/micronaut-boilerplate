@@ -24,10 +24,15 @@ WORKDIR /home
 # Copy the compiled files over.
 COPY --from=build-env /home/build/libs/demo-*-all.jar /home/demo.jar
 
-# Expose the port
-EXPOSE 8080
+# Copy the jmx prometheus agent jar and configuration file
+COPY jmx_prometheus_javaagent-0.15.0.jar .
+
+COPY jmx_config.yml .
+
+# Expose the ports; 8080: application, 9103: jmx scraped metrics
+EXPOSE 8080 9103
 
 # Starts the java app
 # Using EntryPoing to pass env. variables as describe in this article:
-ENV MY_JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=80.0 -noverify -XX:+AlwaysPreTouch"
+ENV MY_JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=80.0 -noverify -XX:+AlwaysPreTouch -javaagent:/home/jmx_prometheus_javaagent-0.15.0.jar=9103:/home/jmx_config.yml"
 ENTRYPOINT exec java $JAVA_OPTS $MY_JAVA_OPTS -jar demo.jar $0 $@
