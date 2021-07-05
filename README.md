@@ -171,3 +171,16 @@ the files affected:
 - [gradle.properties](gradle.properties)
 
 Other upgrades include the [Dockerfile](Dockerfile) to use Gradle 7 and JDK 11.0.11 
+
+### 9-JMXExporter
+This branch has changes that adds an additional java agent 'JMX Exporter' which runs along with the Java process and serves metrics of the local JVM.
+This can be used to check whether the service is up or not by having prometheus scrape the metrics and have some monitoring on the GC events, threads etc.
+For configuring this, we need to have a jmx prometheus agent jar file and a configuration file which contains information about what metrics to serve specifically excluding the rest.
+
+To run the java agent, we added the following data into JAVA_OPS in Dockerfile:
+```
+-javaagent:/home/jmx_prometheus_javaagent-0.15.0.jar=9103:/home/jmx_config.yml
+```
+
+More information about JMX Exporter:
+[JMX Exporter](https://github.com/prometheus/jmx_exporter).
