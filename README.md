@@ -1,11 +1,3 @@
-<style>
-figure {
-  text-align: center;
-  font-style: italic;
-  font-size: smaller;
-}
-</style>
-
 ## Micronaut Boilerplate
 
 This repo is a boilerplate for [Micronaut](https://micronaut.io/). The project was created using 
@@ -27,19 +19,19 @@ and the following Features:
 - jdbc-tomcat
 - netty-server
 
-<figure>
+<figure style="text-align: center; font-size: small">
 <img alt="Launch Configuration" src="images/Micronaut_Launch.png">
-<figcaption ><b>Fig.1 - Launch Configuration</b></figcaption>
+<figcaption><b>Fig.1 - Launch Configuration</b></figcaption>
 </figure>
-
-This boilerplace will be a guide to many features microservices use like database
+<p>
+This boilerplate will be a guide to many features microservices use like database
 connectivity, containers, authentication, OpenAPI, tracing, etc... 
 Those features will be added as branches that build on top of the 
 previous one.
 Comparing branches can be done by initiating the creation of a Pull Request and 
 comparing the branches.
 
-<figure>
+<figure style="text-align: center; font-size: small">
 <img alt="Pull Request branch comparison" src="images/github-compare.png">
 <figcaption><b>Fig.2 - Pull Request branch comparison</b></figcaption>
 </figure>
