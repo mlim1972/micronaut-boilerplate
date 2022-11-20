@@ -1,3 +1,11 @@
+<style>
+figure {
+  text-align: center;
+  font-style: italic;
+  font-size: smaller;
+}
+</style>
+
 ## Micronaut Boilerplate
 
 This repo is a boilerplate for [Micronaut](https://micronaut.io/). The project was created using 
@@ -21,7 +29,7 @@ and the following Features:
 
 <figure>
 <img alt="Launch Configuration" src="images/Micronaut_Launch.png">
-<figcaption><b>Fig.1 - Launch Configuration</b></figcaption>
+<figcaption ><b>Fig.1 - Launch Configuration</b></figcaption>
 </figure>
 
 This boilerplace will be a guide to many features microservices use like database
