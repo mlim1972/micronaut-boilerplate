@@ -19,11 +19,11 @@ and the following Features:
 - jdbc-tomcat
 - netty-server
 
-<figure style="text-align: center; font-size: small">
+<p align="center">
 <img alt="Launch Configuration" src="images/Micronaut_Launch.png">
-<figcaption><b>Fig.1 - Launch Configuration</b></figcaption>
-</figure>
-<p>
+<b><sub>Fig.1 - Launch Configuration</sub></b>
+</p>
+
 This boilerplate will be a guide to many features microservices use like database
 connectivity, containers, authentication, OpenAPI, tracing, etc... 
 Those features will be added as branches that build on top of the 
@@ -31,10 +31,10 @@ previous one.
 Comparing branches can be done by initiating the creation of a Pull Request and 
 comparing the branches.
 
-<figure style="text-align: center; font-size: small">
+<p align="center">
 <img alt="Pull Request branch comparison" src="images/github-compare.png">
-<figcaption><b>Fig.2 - Pull Request branch comparison</b></figcaption>
-</figure>
+<b><sub>Fig.2 - Pull Request branch comparison</sub></b>
+</p>
 
 ## Branches
 ### main
