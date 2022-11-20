@@ -1,12 +1,12 @@
-package com.myexample
+package com.example
 
 import io.micronaut.runtime.EmbeddedApplication
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
-class DemoSpec extends Specification {
+class BoilerplateSpec extends Specification {
 
     @Inject
     EmbeddedApplication<?> application

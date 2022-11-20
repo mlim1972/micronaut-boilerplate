@@ -1,6 +1,6 @@
-package com.myexample.service
+package com.example.services
 
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @Singleton
 class HelloService {

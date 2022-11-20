@@ -1,14 +1,17 @@
-package com.myexample.controller
+package com.example.controllers
 
-import com.myexample.service.HelloService
-import io.micronaut.http.MediaType
+import com.example.services.HelloService
+import groovy.transform.CompileStatic
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
+import io.micronaut.http.MediaType
 
+@CompileStatic
 @Controller("/hello")
 class HelloController {
 
+    // Auto-wired by the constructor
     HelloService helloService
 
     HelloController(HelloService helloService){
