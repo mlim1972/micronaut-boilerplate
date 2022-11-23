@@ -1,8 +1,9 @@
-package com.example.services
+package com.example.service
 
-import com.example.domains.User
-import com.example.repositories.UserRepository
-import com.example.services.security.BCryptPasswordEncoderService
+import com.example.domain.User
+import com.example.repository.UserRepository
+import com.example.service.security.BCryptPasswordEncoderService
+import groovy.util.logging.Slf4j
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import jakarta.inject.Singleton
@@ -17,6 +18,7 @@ import javax.transaction.Transactional
  */
 @Singleton
 @Transactional
+@Slf4j
 class UserService {
     // the UserRepository. This is the low level access to the User table
     UserRepository userRepository
@@ -50,10 +52,6 @@ class UserService {
         userRepository.list(page)
     }
 
-    void findUsers(Map props){
-        entityManager.findAll {}
-    }
-
     /**
      * Private method to save the properties for a User
      * @param user the user to add the new property to
@@ -72,7 +70,8 @@ class UserService {
 
     /**
      * Method to save a user with all the necessary properties
-     * @param props
+     * @param props the properties that are added on top of User
+     * @param detached if the user should be detached from the EntityManager
      * @return the user that is saved in the DB
      */
     User saveUser(Map props, Boolean detached=true){
@@ -86,9 +85,10 @@ class UserService {
      * This method updates a user with new properties
      * @param id the ID of the user to update
      * @param props the property that are updated
+     * @param detached if the user should be detached from the EntityManager
      * @return the User information
      */
-    User updateUser(Long id, Map props){
+    User updateUser(Long id, Map props, Boolean detached=true){
         def entity = userRepository.findById(id)
 
         if(!entity.isPresent()) return null
@@ -99,6 +99,9 @@ class UserService {
         //userRepository.update(user) // Does NOT work for version
         // user EntityManager instead; so that optimistic locking can happen
         entityManager.persist(user)
+
+        // detached the user from the EntityManager context
+        if(detached) entityManager.detach(user)
 
         // return it back after save
         userRepository.findById(id).get()

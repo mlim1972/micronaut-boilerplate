@@ -1,18 +1,34 @@
 micronaut:
   application:
     name: boilerplate
-#datasources:
-#  default:
-#    driverClassName: com.mysql.cj.jdbc.Driver
-#    db-type: mysql
+
+datasources:
+  default:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    db-type: mysql
 #    dialect: MYSQL
-#netty:
+#    url: ${MYSQL_URL:`jdbc:mysql://localhost:6603/demo?useSSL=false`}
+#    username: ${MYSQL_USER:demouser}
+#    password: ${MYSQL_PASSWORD:demopasswd}
 #  default:
-#    allocator:
-#      max-order: 3
-#jpa:
-#  default:
-#    properties:
-#      hibernate:
-#        hbm2ddl:
-#          auto: none
+#    url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=TRUE
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password: ''
+test-resources:
+  containers:
+    mysql:
+      image-name: mysql:5.7.40
+netty:
+  default:
+    allocator:
+      max-order: 3
+jpa:
+  default:
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+        hbm2ddl:
+          auto: update
+

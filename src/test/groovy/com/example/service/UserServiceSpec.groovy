@@ -1,6 +1,6 @@
-package com.example.services
+package com.example.service
 
-import com.example.domains.User
+import com.example.domain.User
 import io.micronaut.data.model.Page
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject

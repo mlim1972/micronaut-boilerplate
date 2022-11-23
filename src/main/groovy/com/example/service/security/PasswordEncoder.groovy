@@ -1,4 +1,4 @@
-package com.example.services.security
+package com.example.service.security
 
 import io.micronaut.core.annotation.NonNull
 

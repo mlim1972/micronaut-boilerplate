@@ -1,9 +1,10 @@
-package com.example.controllers
+package com.example.controller
 
-import com.example.domains.User
-import com.example.services.UserService
+import com.example.domain.User
+import com.example.service.UserService
 import groovy.util.logging.Slf4j
 import io.micronaut.core.annotation.Nullable
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Delete
@@ -75,7 +76,7 @@ class UserController {
      */
     @Post
     User addUser(@Body Map props) {
-        userService.saveUser(user)
+        userService.saveUser(props)
     }
 
     /**
@@ -83,8 +84,10 @@ class UserController {
      * @param id the user to delete based on Id
      */
     @Delete("/{id}")
-    void deleteUser(Long id) {
+    HttpResponse deleteUser(Long id) {
         userService.deleteUser(id)
+
+        return HttpResponse.ok()
     }
 
 }

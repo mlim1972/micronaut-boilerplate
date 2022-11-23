@@ -1,6 +1,6 @@
-package com.example.repositories
+package com.example.repository
 
-import com.example.domains.User
+import com.example.domain.User
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification

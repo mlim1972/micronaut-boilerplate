@@ -1,4 +1,4 @@
-package com.example.domains
+package com.example.domain
 
 import groovy.transform.ToString
 import io.micronaut.data.annotation.DateCreated

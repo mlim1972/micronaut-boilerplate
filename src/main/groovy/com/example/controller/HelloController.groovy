@@ -1,6 +1,6 @@
-package com.example.controllers
+package com.example.controller
 
-import com.example.services.HelloService
+import com.example.service.HelloService
 import groovy.transform.CompileStatic
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get

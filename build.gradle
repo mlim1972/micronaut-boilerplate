@@ -27,6 +27,14 @@ dependencies {
     runtimeOnly("org.flywaydb:flyway-mysql")
     implementation("io.micronaut:micronaut-validation")
 
+    // Micronaut Data processor
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    // Crypt library for password encoding
+    implementation("org.springframework.security:spring-security-crypto:5.7.3")
+    // logging compatibility
+    runtimeOnly("org.slf4j:jcl-over-slf4j")
+    // Temporary H2 DB for testing only
+    testRuntimeOnly("com.h2database:h2")
 }
 
 
