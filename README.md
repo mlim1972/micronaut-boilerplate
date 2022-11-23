@@ -48,8 +48,9 @@ guide with a few changes:
   [services](src/test/groovy/com/example/service) test files 
   for their corresponding classes
 
-### 1.MySQL
-This branch adds a good amount of changes. The main addition is the usage of databases.
+### 1.ORM
+This branch adds a good amount of changes. The main addition is the usage of ORM to manage
+database actions.
 Here is the list of changes:
 - [build.gradle](build.gradle). New entries are added to the build file:
   - Micronaut Data Processor. This will work in conjunction to the Micronaut Data and JPA
@@ -97,4 +98,4 @@ Here is the list of changes:
   will instantiate a MySQL database and the application will connect to it. 
 - [application-test.yml](src/test/resources/application-test.yml). This configuration
   file is used for testing. It uses H2 database for testing. This is a in-memory database
-  that is used for testing. The database is created and destroyed for each test.
+  that is used for testing. The database is created and destroyed for each test
