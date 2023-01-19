@@ -99,3 +99,76 @@ Here is the list of changes:
 - [application-test.yml](src/test/resources/application-test.yml). This configuration
   file is used for testing. It uses H2 database for testing. This is a in-memory database
   that is used for testing. The database is created and destroyed for each test
+
+### 2.MySQL
+This branch adds a good amount of changes. Mainly, the changes are around using MySQL that 
+starts as a container and setup the schema ownership to a specific user. Also, there are
+changes for security and JWT. Here is the list of changes:
+- [build.gradle](build.gradle). New entries are added to the build file:
+  - Security annotation and JWT
+  - Reactor for UI
+- [run-mysql.sh](run-mysql.sh). This script will start a MySQL container and create a user 
+  and database for the application. The script will also create the schema and grant ownership 
+  to the user
+- [setenv.sh](setenv.sh). This script will set the environment variables for the application
+  to use like the database URL, username, and password.
+- [setup-schema.sh](setup-schema.sql). This script will setup the database schema and grant
+  ownership to the user
+- [controller/HelloController](src/main/groovy/com/example/controller/HelloController.groovy). 
+  Updated the class to be protected by the security annotation **'@Secured("isAuthenticated()")'** 
+  and the GET endpoint is now requesting for the principal to be passed in
+- [controller/UserController](src/main/groovy/com/example/controller/UserController.groovy). 
+  Updated the class to bypass security using the annotation **'@Secured("isAnonymous()")'**.
+  This annotation will let non-authenticated users to access the endpoints
+- [domain/Role](src/main/groovy/com/example/domain/Role.groovy). This is a new domain object that will
+  contain all the roles int the system. The comment at the end of the class identifies Users that 
+  have the role. Currently, that code is commented out since there is no need to have a two-way 
+  relationship. Only Users have the link to Roles using a many-to-many relationship reference table.
+  This class uses the following annotations: @Entity, @ToString, @Id, @GeneratedValue, @Version, 
+  @NotNull, @NotEmpty.
+- [domain/User](src/main/groovy/com/example/domain/User.groovy). The User domain is updated to have a 
+  one-to-many relationship with Role since a user can have multiple roles. The new annotation
+  is: **'@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)'**. This annotation indicates
+  the relationship to UserRole, which is the reference table. The fetch type is set to eager since
+  we want the roles to be loaded when the user is loaded
+- [domain/UserRole](src/main/groovy/com/example/domain/UserRole.groovy). This is the reference table
+  between User and Role. This class uses the following annotations:
+  - @EmbeddedId. This annotation refers to a composite key. The composite key is defined in the 
+    class [UserRoleKey](src/main/groovy/com/example/domain/UserRoleKey.groovy)
+  - @ManyToOne. This annotation indicates that the relationship is many-to-one. The many side is
+    the User and the one side is the Role. The other @ManyToOne annotation is for the Role side. 
+    This makes the relationship a many-to-many relationship.
+  - @MapsId("userId"). This annotation is used to map the composite key. The ID is the name of the 
+    field in the composite key class
+  - @JoinColumn(name = "user_id"). This annotation is used to specify the column name for the 
+    relationship. The name is the name of the field in the database
+- [domain/UserRoleKey](src/main/groovy/com/example/domain/UserRoleKey.groovy). This is the composite
+    key class for the UserRole class. This class uses the following annotations:
+    - @Embeddable. This annotation indicates that this class is a composite key definition
+    - @Column. This annotation is used to specify the column name for the field
+- [repository/RoleRepository](src/main/groovy/com/example/repository/RoleRepository.groovy). This is the 
+  repository for Role. This class uses the following annotations: @Repository, @Transactional
+- [repository/UserRepository](src/main/groovy/com/example/repository/UserRepository.groovy). 
+  Updated the UserRepository to add a new method: findOneByUsername. This method will find a
+  user by the username
+- [service/security/AuthProviderService](src/main/groovy/com/example/service/security/AuthProviderService.groovy)
+  This is the authentication provider service. This service provides authentication based on the 
+  credentials from the DB. Since this class implements the 
+  interface **AuthenticationProvider**, Micronaut will automatically use this class for 
+  authentication
+- [service/RoleService](src/main/groovy/com/example/service/RoleService.groovy). 
+  This is the service for Role relation DB activities. For the most part, this class
+  insert roles to the database.
+  This class uses the following annotations: @Singleton, @Transactional
+- [service/UserService](src/main/groovy/com/example/service/UserService.groovy). 
+  Added a couple of methods and updated the existing methods
+- [resources/application.yml](src/main/resources/application.yml). Updated the configuration file
+  to use MySQL directly rather than testcontainers. 
+  The configuration file also has the security configuration. The security
+  configuration is used to configure the authentication provider and the JWT configuration
+
+Before running the application, MySQL should be started using the
+script [run-mysql.sh](run-mysql.sh). This script will start a MySQL container 
+and create the database and user for the application. Since the script starts the
+database as a container, Docker should be installed in the local environment using
+[Docker Desktop](https://www.docker.com/products/docker-desktop).

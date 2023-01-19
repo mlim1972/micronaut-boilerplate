@@ -33,11 +33,29 @@ class UserService {
         this.entityManager = entityManager
     }
 
+    /**
+     * This method gets the user by Id
+     * @param id is the id of the user
+     * @return the user from the DB. Otherwise, it returns null
+     */
     User getUser(Long id, Boolean detached=true) {
         def user = entityManager.find(User.class, id, LockModeType.NONE)
         if(!user) return null
         if(detached) entityManager.detach(user)
         user
+    }
+
+    /**
+     * This method finds a user from the username
+     * @return the user from the DB. Otherwise, it returns null
+     */
+    User findByUsername(String username) {
+        try{
+            userRepository.findOneByUsername(username)
+        } catch (Exception e) {
+            log.error("Error finding user by username: ${username}", e)
+            null
+        }
     }
 
     /**
@@ -76,9 +94,11 @@ class UserService {
      */
     User saveUser(Map props, Boolean detached=true){
         User user = dealWithProps(new User(), props)
-        def user2 = userRepository.save(user)
-        if(detached) entityManager.detach(user2)
-        user2
+        entityManager.persist(user)
+        // flush the value
+        entityManager.flush()
+        if(detached) entityManager.detach(user)
+        user
     }
 
     /**
@@ -99,6 +119,9 @@ class UserService {
         //userRepository.update(user) // Does NOT work for version
         // user EntityManager instead; so that optimistic locking can happen
         entityManager.persist(user)
+
+        // flush the value
+        entityManager.flush()
 
         // detached the user from the EntityManager context
         if(detached) entityManager.detach(user)

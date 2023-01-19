@@ -24,7 +24,7 @@ class UserControllerSpec extends Specification{
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
-                     email: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
+                     username: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
         when:
         HttpRequest request = HttpRequest.create(HttpMethod.POST, '/users')
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -37,7 +37,7 @@ class UserControllerSpec extends Specification{
         user.id != null
         user.lastName == props.lastName
         user.firstName == props.firstName
-        user.email == props.email
+        user.username == props.username
     }
 
     void "test user update"() {
@@ -45,7 +45,7 @@ class UserControllerSpec extends Specification{
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
-                     email: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
+                     username: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
         when:
         HttpRequest request = HttpRequest.create(HttpMethod.POST, '/users')
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -58,7 +58,7 @@ class UserControllerSpec extends Specification{
         user.id != null
         user.lastName == props.lastName
         user.firstName == props.firstName
-        user.email == props.email
+        user.username == props.username
 
         when:
         Map newProp = [lastName: "${prefix}-${index}.lname22".toString()]
@@ -73,7 +73,7 @@ class UserControllerSpec extends Specification{
         user2.id != null
         user2.lastName == newProp.lastName
         user2.firstName == props.firstName
-        user2.email == props.email
+        user2.username == props.username
     }
 
     void "test user creation and listing"() {
@@ -81,7 +81,7 @@ class UserControllerSpec extends Specification{
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
-                     email: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
+                     username: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
         when:
         HttpRequest request = HttpRequest.create(HttpMethod.POST, '/users')
                 .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -104,11 +104,11 @@ class UserControllerSpec extends Specification{
     }
 
     void "test user creation and deletion"() {
-        int index = 3
+        int index = 4
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
-                     email: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
+                     username: "lname-${prefix}-${index}@email.com".toString(), password: "12345"]
         when:
         HttpRequest request = HttpRequest.create(HttpMethod.POST, '/users')
                 .accept(MediaType.APPLICATION_JSON_TYPE)

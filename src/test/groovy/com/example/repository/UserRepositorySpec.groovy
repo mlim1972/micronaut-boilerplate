@@ -19,7 +19,7 @@ class UserRepositorySpec extends Specification{
 
     void "test user update"(){
         when:
-        def user = new User(firstName: "john", lastName: "doe", email: "${prefix}.john@email.com", password: "12345")
+        def user = new User(firstName: "john", lastName: "doe", username: "${prefix}.john@email.com", password: "12345")
         def saved = userRepository.save(user)
 
         then:
@@ -39,7 +39,7 @@ class UserRepositorySpec extends Specification{
 
     void "test user update with EntityManager"(){
         when:
-        def user = new User(firstName: "john", lastName: "doe", email: "${prefix}.john2@email.com", password: "12345")
+        def user = new User(firstName: "john", lastName: "doe", username: "${prefix}.john2@email.com", password: "12345")
         def saved = userRepository.save(user)
         User user2 = entityManager.find(User.class, user.id)
         user2.lastName = "doe2"

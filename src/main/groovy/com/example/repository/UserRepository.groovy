@@ -13,4 +13,6 @@ import io.micronaut.data.repository.CrudRepository
 @Repository
 interface UserRepository extends CrudRepository<User, Long>{
     Page<User> list(Pageable pageable)
+
+    User findOneByUsername(String username)
 }

@@ -1,24 +1,24 @@
 micronaut:
   application:
     name: boilerplate
-
+  security:
+    authentication: bearer
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:kWfCD!1yy3FQQTEK#Tpx^WoqF&isJqr2gJsUM0Tu!HtlN7^o5b}"'
 datasources:
   default:
     driverClassName: com.mysql.cj.jdbc.Driver
     db-type: mysql
-#    dialect: MYSQL
-#    url: ${MYSQL_URL:`jdbc:mysql://localhost:6603/demo?useSSL=false`}
-#    username: ${MYSQL_USER:demouser}
-#    password: ${MYSQL_PASSWORD:demopasswd}
-#  default:
-#    url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=TRUE
-#    driverClassName: org.h2.Driver
-#    username: sa
-#    password: ''
-test-resources:
-  containers:
-    mysql:
-      image-name: mysql:5.7.40
+    dialect: MYSQL
+    url: ${MYSQL_URL:`jdbc:mysql://localhost:3306/demo?useSSL=false`}
+    username: ${MYSQL_USER:demouser}
+    password: ${MYSQL_PASSWORD:demopasswd}
+    minPoolSize: 1
+    maxPoolSize: ${MYSQL_MAXPOOLSIZE:5}
 netty:
   default:
     allocator:

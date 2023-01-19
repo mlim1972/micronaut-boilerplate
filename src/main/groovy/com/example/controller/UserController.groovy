@@ -14,12 +14,14 @@ import io.micronaut.http.annotation.Put
 import io.micronaut.http.annotation.QueryValue
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
+import io.micronaut.security.annotation.Secured
 
 /**
  * This is the controller endpoint for User
  */
 @ExecuteOn(TaskExecutors.IO)
 @Controller("/users")
+@Secured("isAnonymous()")
 @Slf4j
 class UserController {
     UserService userService

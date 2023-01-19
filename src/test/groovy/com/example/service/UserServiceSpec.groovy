@@ -1,5 +1,6 @@
 package com.example.service
 
+import com.example.domain.Role
 import com.example.domain.User
 import io.micronaut.data.model.Page
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -13,12 +14,17 @@ class UserServiceSpec extends Specification{
     @Inject
     UserService userService
 
+    @Inject
+    RoleService roleService
+
     /**
      * Test saving users using the UserService
      */
     void "test saving user"() {
+        int index = 1
         when:
-        def props = [firstName: "John", lastName: "Doe", email: "${prefix}.john@email.com",
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john@email.com".toString(),
                      password: "123456", notes: "This is a test"]
         def user = userService.saveUser(props)
 
@@ -36,8 +42,11 @@ class UserServiceSpec extends Specification{
      * of the update. This indicates that optimistic locking is working as well.
      */
     void "test saving and updating user"() {
+        def index = 2
+
         when:
-        def props = [firstName: "John2", lastName: "Doe2", email: "${prefix}.john2@email.com",
+        def props = [firstName: "John2", lastName: "Doe2",
+                     username: "${prefix}-${index}.john2@email.com".toString(),
                      password: "1234567890", notes: "This is a test2"]
         def user = userService.saveUser(props)
 
@@ -68,9 +77,12 @@ class UserServiceSpec extends Specification{
     /**
      * Saving user with non-detached. This means that the user reference is handled by the hibernate context
      */
-    void "test saving non-detached user"(){
+    void "test saving non detached user"() {
+        def index = 3
+
         when:
-        def props = [firstName: "John", lastName: "Doe", email: "${prefix}.john3@email.com",
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john3@email.com".toString(),
                      password: "123456", notes: "This is a test"]
         def user = userService.saveUser(props, false)
 
@@ -78,7 +90,7 @@ class UserServiceSpec extends Specification{
         user.version == 0L
 
         when:
-        def user2 = userService.updateUser(user.id, [firstName: "Johny"])
+        def user2 = userService.updateUser(user.id, [firstName: "Johny"], false)
 
         then:
         user.id == user2.id
@@ -86,14 +98,16 @@ class UserServiceSpec extends Specification{
         user.firstName == "Johny"
         user.version == user2.version
         user2.version == 1L
-
     }
 
     void "test save and delete user"(){
+        def index = 4
+
         when:
-        def props = [firstName: "John", lastName: "Doe", email: "${prefix}.john3@email.com",
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john4@email.com".toString(),
                      password: "123456", notes: "This is a test"]
-        def user = userService.saveUser(props, false)
+        def user = userService.saveUser(props)
 
         then:
         user.id != null
@@ -108,12 +122,36 @@ class UserServiceSpec extends Specification{
 
     }
 
+    void "test save and find by username"(){
+        def index = 5
+
+        when:
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john5@email.com".toString(),
+                     password: "123456", notes: "This is a test"]
+        def user = userService.saveUser(props)
+
+        then:
+        user.id != null
+        user.firstName == "John"
+
+        when:
+        def user2 = userService.findByUsername(props.username)
+
+        then:
+        user2.id == user.id
+
+    }
+
     void "test listing users"(){
+        def index = 6
+
+        when:
         given:
         def data = []
         for(i in 0..10){
             def props = [firstName: "fname$i", lastName: "lname$i",
-                         email: "fname${i}.lname${i}@email.com", password: "12345.$i"]
+                         username: "fname${i}.lname${i}@domain${prefix}.com".toString(), password: "12345.$i"]
             data << props
         }
 
@@ -127,5 +165,24 @@ class UserServiceSpec extends Specification{
         then:
         dbUsers.size == 5
 
+    }
+
+    void "test saving user with roles"(){
+        def index = 7
+
+        when:
+        def role = roleService.addRole("admin")
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john7@email.com".toString(),
+                     password: "123456", notes: "This is a test", roles: [role]]
+        def user = userService.saveUser(props)
+
+        print(user)
+
+        then:
+        user.id != null
+        user.firstName == props.firstName
+        user.roles.size() == 1
+        ((Role)user.roles[0]).authority == role.authority
     }
 }

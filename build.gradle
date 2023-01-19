@@ -35,6 +35,14 @@ dependencies {
     runtimeOnly("org.slf4j:jcl-over-slf4j")
     // Temporary H2 DB for testing only
     testRuntimeOnly("com.h2database:h2")
+
+    // Security for authentication
+    annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+
+    // Reactor
+    implementation("io.micronaut.reactor:micronaut-reactor")
+
 }
 
 

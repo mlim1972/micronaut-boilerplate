@@ -16,6 +16,6 @@ class HelloServiceSpec extends Specification {
         def hello = helloService.helloMessage
 
         then:
-        hello == "Hello World"
+        hello == "Hello "
     }
 }

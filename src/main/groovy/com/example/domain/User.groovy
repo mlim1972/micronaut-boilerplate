@@ -3,6 +3,9 @@ package com.example.domain
 import groovy.transform.ToString
 import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.DateUpdated
+
+import javax.persistence.FetchType
+import javax.persistence.OneToMany
 import javax.persistence.Version
 import javax.persistence.Column
 import javax.validation.constraints.Email
@@ -39,7 +42,7 @@ class User implements Serializable {
 
     @Column(unique=true)
     @Email(regexp = ".+[@].+[\\.].+")
-    String email  // email type and unique constraint created
+    String username  // email type and unique constraint created
 
     // security fields
     @NotNull
@@ -49,6 +52,10 @@ class User implements Serializable {
     boolean accountExpired = false
     boolean accountLocked = false
     boolean passwordExpired = false
+
+    // eager fetching roles
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    Set<UserRole> roles
 
     @DateCreated
     Date dateCreated    // managed by the framework when the records is added

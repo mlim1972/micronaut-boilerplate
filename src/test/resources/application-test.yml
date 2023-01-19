@@ -12,4 +12,4 @@ jpa:
         format_sql: false
         show_sql: true
         hbm2ddl:
-          auto: create
+          auto: update
