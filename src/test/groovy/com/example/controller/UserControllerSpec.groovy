@@ -104,7 +104,7 @@ class UserControllerSpec extends Specification{
     }
 
     void "test user creation and deletion"() {
-        int index = 3
+        int index = 4
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),

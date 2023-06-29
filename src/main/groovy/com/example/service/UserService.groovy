@@ -99,6 +99,7 @@ class UserService {
         //userRepository.update(user) // Does NOT work for version
         // user EntityManager instead; so that optimistic locking can happen
         entityManager.persist(user)
+        entityManager.flush()
 
         // detached the user from the EntityManager context
         if(detached) entityManager.detach(user)
