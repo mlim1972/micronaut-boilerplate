@@ -119,6 +119,7 @@ class UserService {
         //userRepository.update(user) // Does NOT work for version
         // user EntityManager instead; so that optimistic locking can happen
         entityManager.persist(user)
+        entityManager.flush()
 
         // flush the value
         entityManager.flush()
