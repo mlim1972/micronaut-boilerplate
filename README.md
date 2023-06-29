@@ -165,10 +165,39 @@ changes for security and JWT. Here is the list of changes:
 - [resources/application.yml](src/main/resources/application.yml). Updated the configuration file
   to use MySQL directly rather than testcontainers. 
   The configuration file also has the security configuration. The security
-  configuration is used to configure the authentication provider and the JWT configuration
+  configuration is used to configure the authentication provider and the JWT configuration.
+  Notice the $ sign as the value for some of the properties. This is used to get the value from
+  the environment variables. The environment variables are set in the script [setenv.sh](setenv.sh).
+  Example: **'${JWT_SECRET}'**. This will get the value from the environment variable JWT_SECRET
 
-Before running the application, MySQL should be started using the
-script [run-mysql.sh](run-mysql.sh). This script will start a MySQL container 
+Before running the application, you need to source the setenv.sh and then start MySQL 
+using the script [run-mysql.sh](run-mysql.sh). This script will start a MySQL container 
 and create the database and user for the application. Since the script starts the
-database as a container, Docker should be installed in the local environment using
+database as a container, **Docker should be installed** in the local environment using
 [Docker Desktop](https://www.docker.com/products/docker-desktop).
+
+```bash
+source setenv.sh
+./run-mysql.sh
+```
+
+After running the command above, the DB will be running and setup with a schema
+and a username and password from the [setenv.sh](setenv.sh) script. If you connect
+to the DB, you will notice that there is no tables in the schema. This is because
+the application will create the tables when it starts. What makes this
+possible is the section on JPA in the [application.yml](src/main/resources/application.yml)
+file. The property **'jpa.default.properties.hibernate.hbm2ddl.auto'** is set to **'update'**.
+
+```yaml
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+```
+
+At this point you can start the application via gradle.
+
+Note: To run all test is still possible without starting MySQL since the tests are using H2
+database and 
