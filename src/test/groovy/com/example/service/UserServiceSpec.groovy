@@ -2,7 +2,6 @@ package com.example.service
 
 import com.example.domain.Role
 import com.example.domain.User
-import io.micronaut.data.model.Page
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
@@ -21,7 +20,7 @@ class UserServiceSpec extends Specification{
      * Test saving users using the UserService
      */
     void "test saving user"() {
-        int index = 1
+        def index = UUID.randomUUID().toString()
         when:
         def props = [firstName: "John", lastName: "Doe",
                      username: "${prefix}-${index}.john@email.com".toString(),
@@ -42,7 +41,7 @@ class UserServiceSpec extends Specification{
      * of the update. This indicates that optimistic locking is working as well.
      */
     void "test saving and updating user"() {
-        def index = 2
+        def index = UUID.randomUUID().toString()
 
         when:
         def props = [firstName: "John2", lastName: "Doe2",
@@ -78,7 +77,7 @@ class UserServiceSpec extends Specification{
      * Saving user with non-detached. This means that the user reference is handled by the hibernate context
      */
     void "test saving non detached user"() {
-        def index = 3
+        def index = UUID.randomUUID().toString()
 
         when:
         def props = [firstName: "John", lastName: "Doe",
@@ -101,7 +100,7 @@ class UserServiceSpec extends Specification{
     }
 
     void "test save and delete user"(){
-        def index = 4
+        def index = UUID.randomUUID().toString()
 
         when:
         def props = [firstName: "John", lastName: "Doe",
@@ -123,7 +122,7 @@ class UserServiceSpec extends Specification{
     }
 
     void "test save and find by username"(){
-        def index = 5
+        def index = UUID.randomUUID().toString()
 
         when:
         def props = [firstName: "John", lastName: "Doe",
@@ -144,14 +143,14 @@ class UserServiceSpec extends Specification{
     }
 
     void "test listing users"(){
-        def index = 6
+        def index = new Date().getTime()
 
         when:
         given:
         def data = []
         for(i in 0..10){
             def props = [firstName: "fname$i", lastName: "lname$i",
-                         username: "fname${i}.lname${i}@domain${prefix}.com".toString(), password: "12345.$i"]
+                         username: "user.${index}.${i}@domain${prefix}.com".toString(), password: "12345.$i"]
             data << props
         }
 
@@ -160,18 +159,17 @@ class UserServiceSpec extends Specification{
         data.forEach{
             users << userService.saveUser(it)
         }
-        Page<User> dbUsers = userService.getUsers(0,5)
+        List<User> dbUsers = userService.getUsers(1,5)
 
         then:
-        dbUsers.size == 5
-
+        dbUsers.size() == 5
     }
 
     void "test saving user with roles"(){
-        def index = 7
+        def index = UUID.randomUUID().toString()
 
         when:
-        def role = roleService.addRole("admin")
+        def role = roleService.addRole("TestRole")
         def props = [firstName: "John", lastName: "Doe",
                      username: "${prefix}-${index}.john7@email.com".toString(),
                      password: "123456", notes: "This is a test", roles: [role]]

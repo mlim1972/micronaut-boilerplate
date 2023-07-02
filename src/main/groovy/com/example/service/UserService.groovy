@@ -4,8 +4,9 @@ import com.example.domain.User
 import com.example.repository.UserRepository
 import com.example.service.security.BCryptPasswordEncoderService
 import groovy.util.logging.Slf4j
-import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
+import io.micronaut.data.model.Slice
+import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 
 import javax.persistence.EntityManager
@@ -60,14 +61,22 @@ class UserService {
 
     /**
      * This method returns users using the start index and the end index
-     * @param start index number that identifies the start of the list
-     * @param end index number that identifies the end of the list
+     * @param page is the page number
+     * @param size is the size of the page
      * @return a Page of users. This page can continue if needed
      */
-    Page<User> getUsers(int start, int end){
-        def page = Pageable.from(start, end)
+    List<User> getUsers(int page, int size){
+        // creating sorting order for the query
+        List<Sort.Order> orders = new ArrayList<Sort.Order>()
+        // as an example, we are sorting by id
+        orders << new Sort.Order("id", Sort.Order.Direction.ASC, false)
+        // now create the pageable object
+        def pages = Pageable.from(page, size, Sort.of(orders))
 
-        userRepository.list(page)
+        def sliceOfUsers = userRepository.list(pages)
+
+        if(sliceOfUsers == null) return []
+        sliceOfUsers.getContent()
     }
 
     /**

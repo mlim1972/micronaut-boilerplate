@@ -201,3 +201,90 @@ At this point you can start the application via gradle.
 
 Note: To run all test is still possible without starting MySQL since the tests are using H2
 database and 
+
+### 2.Flyway
+[Flyway](https://flywaydb.org/) is a database migration tool. It is used to manage the database schema and data.
+The application will use Flyway to create the database schema and insert seed data.
+Using Flyway will make the application more portable since the database schema and data
+will be created when the application starts. This will make it easier to deploy the
+application to different environments. In addition, as we add new features to the application
+and the database schema changes, Flyway will be used to update the database schema. 
+Flyway creates a table in the database to keep track of the changes. The table is called
+**'flyway_schema_history'**. This table is used to keep track of the changes that have been
+applied to the database. The table has the following columns:
+- installed_rank. This column is used to keep track of the order of the changes
+- version. This column is used to keep track of the version of the change
+- description. This column is used to keep track of the description of the change
+- type. This column is used to keep track of the type of the change
+- script. This column is used to keep track of the script that was used to make the change
+- checksum. This column is used to keep track of the checksum of the change
+- installed_by. This column is used to keep track of the user that installed the change
+- installed_on. This column is used to keep track of the date and time that the change was installed
+- execution_time. This column is used to keep track of the execution time of the change
+- success. This column is used to keep track of the success of the change
+
+The following files are changed to this branch:
+- [build.gradle](build.gradle). Removed dependencies to Test Containers. Dependencies to
+     Flyway and MySQL were already added from previous branches
+- [README.md](README.md). This file was updated to add information about Flyway
+- [run-mysql](run-mysql.sh). Updated the pull of MySQL version to v8 since 5.7 is no longer
+     supported by Flyway
+- [/domain/Role](src/main/groovy/com/example/domain/Role.groovy). This class was updated to
+     add the following annotation **@EqualsAndHashCode**. This annotation is used to generate
+     the equals and hashcode methods
+- [/domain/User](src/main/groovy/com/example/domain/User.groovy). This class was updated to
+     add the following annotation **@EqualsAndHashCode**. This annotation is used to generate
+     the equals and hashcode methods
+- [/domain/UserRole](src/main/groovy/com/example/domain/UserRole.groovy). This class was updated to
+     add the following annotation **@EqualsAndHashCode**. This annotation is used to generate
+     the equals and hashcode methods
+- [/domain/UserRoleKey](src/main/groovy/com/example/domain/UserRoleKey.groovy). This class was updated to
+     add the following annotation **@EqualsAndHashCode**. This annotation is used to generate
+     the equals and hashcode methods
+- [/repository/UserRepository](/src/main/groovy/com/example/repository/UserRepository.groovy). This class was updated to
+     change the base class from **CrudRepository** to **PageableRepository** in order to support
+     **list** as a pageable method
+- [/service/UserService](/src/main/groovy/com/example/service/UserService.groovy). This class was updated
+     to change the **list** method to use Pageable and Sort to get a list of users by page and sort
+- [application.yml](/src/main/resources/application.yml). Added a parameter to the db connectivity due to 
+     upgrading the DB to MySQL v8.0. In addition, since we are using Flyway to manage the database schema
+     we will create DDL schema manually and hence the **jpa.default.property.hibernate.hbm2ddl.auto** 
+     is set from **update** to **none**.
+```yaml
+jpa:
+  default:
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+        hbm2ddl:
+          auto: none
+```
+- [/resources/dbmigrations/V1__setting_userandrole.sql](src/main/resources/dbmigrations/V1__setting_userandrole.sql). 
+  This file contains the SQL to create the initial database schema. Once this is deployed, this file will not be
+  modified. New changes to the database schema will be added to new files. The files will be named in the format
+    **V{version}__{description}.sql**. The version is a number that is used to keep track of the order of the changes.
+  This file in particular sets up the database schema and inserts seed data. So, it creates the following tables:
+    - role
+    - user
+    - user_role
+  This file also seeds the table with initial data
+- [/controller/LoginControllerSpec](/src/test/groovy/com/example/controller/LoginControllerSpec.groovy). 
+  This class was updated to change the index when inserting to tables. This is done so that while testing
+  there is no conflict with previous data that was inserted to the tables
+- [/controller/UserControllerSpec](/src/test/groovy/com/example/controller/UserControllerSpec.groovy).
+  This class was updated to change the index when inserting to tables. This is done so that while testing
+  there is no conflict with previous data that was inserted to the tables
+- [/service/RoleServiceSpec](/src/test/groovy/com/example/service/RoleServiceSpec.groovy). 
+  This class was updated to change the authority name because the 'admin' authority was already inserted
+  by flyway during the initial setup of the database schema
+- [/service/UserServiceSpec](/src/test/groovy/com/example/service/UserServiceSpec.groovy). 
+  This class was updated to change the index when inserting to tables. This is done so that while testing
+  there is no conflict with previous data that was inserted to the tables
+- [application-test.yml](/src/test/resources/application-test.yml). This file was blanked out to prevent
+  the test containers from starting MySQL. Since we are using Flyway to manage the database schema, we will
+  create the database schema manually and hence we do not need to start MySQL in the test containers.
+  We want to use the same application.yml as when we run the application
+
+Since we are creating a new flow for db creation, the [run-mysql.sh](run-mysql.sh) script should be run
+to create the new DB schema via Flyway.

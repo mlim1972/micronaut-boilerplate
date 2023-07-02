@@ -1,6 +1,7 @@
 package com.example.domain
 
 import groovy.transform.ToString
+import groovy.transform.EqualsAndHashCode
 import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.DateUpdated
 
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "user")
 @ToString
+@EqualsAndHashCode
 class User implements Serializable {
     private static final long serialVersionUID = 1L
     @Id

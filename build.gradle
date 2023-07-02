@@ -2,7 +2,7 @@ plugins {
     id("groovy") 
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.7.10"
-    id("io.micronaut.test-resources") version "3.7.10"
+    //id("io.micronaut.test-resources") version "3.7.10"
 }
 
 version = "0.1"
@@ -27,9 +27,9 @@ dependencies {
     runtimeOnly("org.flywaydb:flyway-mysql")
     implementation("io.micronaut:micronaut-validation")
 
-    testImplementation("org.testcontainers:mysql")
-    testImplementation("org.testcontainers:spock")
-    testImplementation("org.testcontainers:testcontainers")
+//    testImplementation("org.testcontainers:mysql")
+//    testImplementation("org.testcontainers:spock")
+//    testImplementation("org.testcontainers:testcontainers")
 
     // Micronaut Data processor
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
@@ -38,7 +38,7 @@ dependencies {
     // logging compatibility
     runtimeOnly("org.slf4j:jcl-over-slf4j")
     // Temporary H2 DB for testing only
-    testRuntimeOnly("com.h2database:h2")
+    //testRuntimeOnly("com.h2database:h2")
 
     // Security for authentication
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
@@ -46,7 +46,6 @@ dependencies {
 
     // Reactor
     implementation("io.micronaut.reactor:micronaut-reactor")
-
 }
 
 

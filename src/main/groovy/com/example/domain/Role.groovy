@@ -1,6 +1,7 @@
 package com.example.domain
 
 import groovy.transform.ToString
+import groovy.transform.EqualsAndHashCode
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @ToString
+@EqualsAndHashCode
 class Role implements Serializable{
     private static final long serialVersionUID = 1L
 

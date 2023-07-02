@@ -12,12 +12,12 @@ class RoleServiceSpec extends Specification {
 
     void "test role save"() {
         when:
-        def role = new Role(authority: "admin")
+        def role = new Role(authority: "TestRole")
         def saved = roleService.save(role)
 
         then:
         saved.id != null
         saved.version == 0L
-        saved.authority == "admin"
+        saved.authority == "TestRole"
     }
 }

@@ -20,7 +20,7 @@ class UserControllerSpec extends Specification{
     HttpClient client
 
     void "test user creation"() {
-        int index = 1
+        def index = UUID.randomUUID().toString()
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
@@ -41,7 +41,7 @@ class UserControllerSpec extends Specification{
     }
 
     void "test user update"() {
-        int index = 2
+        def index = UUID.randomUUID().toString()
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
@@ -77,7 +77,7 @@ class UserControllerSpec extends Specification{
     }
 
     void "test user creation and listing"() {
-        int index = 3
+        def index = UUID.randomUUID().toString()
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),
@@ -104,7 +104,7 @@ class UserControllerSpec extends Specification{
     }
 
     void "test user creation and deletion"() {
-        int index = 4
+        def index = UUID.randomUUID().toString()
 
         given:
         def props = [firstName: "${prefix}-${index}.fname".toString(), lastName: "${prefix}-${index}.lname".toString(),

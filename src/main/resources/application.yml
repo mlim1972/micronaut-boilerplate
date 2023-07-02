@@ -14,7 +14,7 @@ datasources:
     driverClassName: com.mysql.cj.jdbc.Driver
     db-type: mysql
     dialect: MYSQL
-    url: ${MYSQL_URL:`jdbc:mysql://localhost:3306/demo?useSSL=false`}
+    url: ${MYSQL_URL:`jdbc:mysql://localhost:3306/demo?allowPublicKeyRetrieval=true&useSSL=false`}
     username: ${MYSQL_USER:demouser}
     password: ${MYSQL_PASSWORD:demopasswd}
     minPoolSize: 1
@@ -30,5 +30,11 @@ jpa:
         format_sql: false
         show_sql: false
         hbm2ddl:
-          auto: update
+          auto: none
 
+flyway:
+  datasources:
+    default:
+      locations:
+        - classpath:dbmigrations
+      baseline-on-migrate: true

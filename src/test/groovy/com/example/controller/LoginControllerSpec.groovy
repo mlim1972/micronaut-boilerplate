@@ -42,7 +42,7 @@ class LoginControllerSpec extends Specification{
 
     void "upon successful authentication, a JSON Web token is issued to the user"() {
         given:
-        def index = 1
+        def index = UUID.randomUUID().toString()
         def props = [firstName: "John", lastName: "Doe",
                      username: "${prefix}-${index}.user@email.com".toString(),
                      password: "123456", notes: "This is a test"]
