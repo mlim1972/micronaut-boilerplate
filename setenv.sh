@@ -16,6 +16,6 @@ export MYSQL_CONTAINER_NAME=my-mysql
 # Set MySQL env vars
 export HOST_IP=$hostIp
 export MYSQL_DBNAME=demo
-export MYSQL_URL="jdbc:mysql://$HOST_IP:6603/$MYSQL_DBNAME?useSSL=false"
+#export MYSQL_URL="jdbc:mysql://$HOST_IP:3306/$MYSQL_DBNAME?allowPublicKeyRetrieval=true&useSSL=false"
 export MYSQL_USER=demouser
 export MYSQL_PASSWORD=demopasswd

@@ -5,7 +5,6 @@ import com.example.repository.UserRepository
 import com.example.service.security.BCryptPasswordEncoderService
 import groovy.util.logging.Slf4j
 import io.micronaut.data.model.Pageable
-import io.micronaut.data.model.Slice
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 

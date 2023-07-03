@@ -229,6 +229,8 @@ The following files are changed to this branch:
 - [README.md](README.md). This file was updated to add information about Flyway
 - [run-mysql](run-mysql.sh). Updated the pull of MySQL version to v8 since 5.7 is no longer
      supported by Flyway
+- [setenv.sh](setenv.sh). Updated the MYSQL URL to include a new parameter needed to connect
+     to the MYSQL v8.0. The parameter is **'allowPublicKeyRetrieval=true'**
 - [/domain/Role](src/main/groovy/com/example/domain/Role.groovy). This class was updated to
      add the following annotation **@EqualsAndHashCode**. This annotation is used to generate
      the equals and hashcode methods
@@ -268,7 +270,17 @@ jpa:
     - role
     - user
     - user_role
-  This file also seeds the table with initial data
+  
+  This file also seeds the table with initial data to the role table. The initial data is the following:
+    - ADMIN
+    - USER
+    - EDITOR
+- [/dbmigrationscript/v1/V1_1__seed_user](src/main/resources/db/migration/v1/V1_1__seed_user.sql).
+  This is the script to insert seed data for the user table and the user role table. Flyway
+  will run the .sql file above and this file in order to create the database schema and insert
+  seed data. The reason we need to create a groovy script rather than adding it to the Flyway .sql file
+  is that we need to use some coding not available in the .sql file. The groovy script
+  adds a user to the user table using the encrypted password. Encryption is not available in SQL.
 - [/controller/LoginControllerSpec](/src/test/groovy/com/example/controller/LoginControllerSpec.groovy). 
   This class was updated to change the index when inserting to tables. This is done so that while testing
   there is no conflict with previous data that was inserted to the tables

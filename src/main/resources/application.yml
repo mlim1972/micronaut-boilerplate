@@ -35,6 +35,8 @@ jpa:
 flyway:
   datasources:
     default:
+      enabled: true
       locations:
         - classpath:dbmigrations
+        - classpath:com/example/dbmigrationscript/v1
       baseline-on-migrate: true

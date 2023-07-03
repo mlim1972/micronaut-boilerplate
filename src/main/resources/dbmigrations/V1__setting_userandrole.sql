@@ -40,14 +40,7 @@ CREATE TABLE `user_role` (
 #####################################
 #           SEED DATA               #
 #####################################
-#################  INSERTING USER  #############################
- */
-INSERT INTO `user` (`version`,`first_name`,`last_name`, `username`,`password`, `enabled`,
-                    `password_expired`, `account_locked`, `account_expired`,`date_created`,
-                    `date_updated`, `notes`
-                    )
-       VALUES (0, 'Super', 'Admin', 'super.admin@company.com', 'password', 1,
-               0, 0, 0, NOW(), NOW(), 'notes here');
+*/
 
 /* #################  INSERTING ROLE  ############################# */
 INSERT INTO `role` (`version`, `authority`)
@@ -56,7 +49,3 @@ INSERT INTO `role` (`version`, `authority`)
         VALUES (0, 'USER');
 INSERT INTO `role` (`version`, `authority`)
         VALUES (0, 'EDITOR');
-
-/* #################  INSERTING USER_ROLE  ############################# */
-INSERT INTO `user_role` (`role_id`, `user_id`)
-        VALUES (1, 1);
