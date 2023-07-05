@@ -32,20 +32,23 @@ class UserController {
 
     /**
      * Endpoint for /users using GET. This endpoint uses pagination by
-     * providing the start and end index
-     * @param start the start index for the pagination
-     * @param end the end index for the pagination
+     * providing the page number and size of the page
+     * @param page the page number for the pagination
+     * @param size the size of the page for the pagination
      * @return a list of users
      *
      * Why is this not working? This makes more sense that the one that works!
      * List<User> getUsers(@Nullable @QueryValue Integer start=0, @Nullable @QueryValue Integer end=10)
      */
     @Get
-    List<User> getUsers(@Nullable @QueryValue(defaultValue = "0") Integer start,
-                        @Nullable @QueryValue(defaultValue = "10") Integer end) {
-        log.info("start=${start}; end=${end}")
+    List<User> getUsers(@Nullable @QueryValue(defaultValue = "1") Integer page,
+                        @Nullable @QueryValue(defaultValue = "10") Integer size) {
+        if(page < 1) page = 1
+        if(size < 1 || size > 100) size = 10
 
-        userService.getUsers(start, end).toList()
+        log.info("page=${page}; size=${size}")
+
+        userService.getUsers(page, size).toList()
     }
 
     /**

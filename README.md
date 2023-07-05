@@ -246,6 +246,9 @@ The following files are changed to this branch:
 - [/repository/UserRepository](/src/main/groovy/com/example/repository/UserRepository.groovy). This class was updated to
      change the base class from **CrudRepository** to **PageableRepository** in order to support
      **list** as a pageable method
+- [/controller/UserController](/src/main/groovy/com/example/controller/UserController.groovy). The get
+  user pagination was updated to use the new **list** method in the **UserService**. The method was uupdated
+  to receive the page and the page size as parameters
 - [/service/UserService](/src/main/groovy/com/example/service/UserService.groovy). This class was updated
      to change the **list** method to use Pageable and Sort to get a list of users by page and sort
 - [application.yml](/src/main/resources/application.yml). Added a parameter to the db connectivity due to 
@@ -286,7 +289,8 @@ jpa:
   there is no conflict with previous data that was inserted to the tables
 - [/controller/UserControllerSpec](/src/test/groovy/com/example/controller/UserControllerSpec.groovy).
   This class was updated to change the index when inserting to tables. This is done so that while testing
-  there is no conflict with previous data that was inserted to the tables
+  there is no conflict with previous data that was inserted to the tables. In addition, the test was updated 
+  to test the list of users by page and size
 - [/service/RoleServiceSpec](/src/test/groovy/com/example/service/RoleServiceSpec.groovy). 
   This class was updated to change the authority name because the 'admin' authority was already inserted
   by flyway during the initial setup of the database schema
