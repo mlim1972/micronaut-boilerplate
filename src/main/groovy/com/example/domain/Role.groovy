@@ -25,8 +25,4 @@ class Role implements Serializable{
     @NotNull
     @NotEmpty
     String authority
-
-    // This is the inverse side of the relationship
-//    @OneToMany(mappedBy = "role")
-//    Set<UserRole> users
 }

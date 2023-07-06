@@ -5,7 +5,9 @@ import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.DateUpdated
 
 import javax.persistence.FetchType
-import javax.persistence.OneToMany
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.Version
 import javax.persistence.Column
 import javax.validation.constraints.Email
@@ -54,8 +56,20 @@ class User implements Serializable {
     boolean passwordExpired = false
 
     // eager fetching roles
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    Set<UserRole> roles
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            schema = "public",
+            uniqueConstraints = [
+                @javax.persistence.UniqueConstraint(
+                        name = "UK_USERROLE_USERID_ROLEID_KEY",
+                        columnNames = ["user_id", "role_id"]
+                )
+            ]
+    )
+    Set<Role> roles
 
     @DateCreated
     Date dateCreated    // managed by the framework when the records is added
