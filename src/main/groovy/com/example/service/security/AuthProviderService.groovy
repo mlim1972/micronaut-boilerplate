@@ -66,7 +66,8 @@ class AuthProviderService implements AuthenticationProvider {
     }
 
     private AuthenticationResponse createSuccessfulAuthenticationResponse(User user) {
-        Set<String> authorities = user.roles.collect { it.role.authority } as Set<String>
+        Set<String> authorities = [] as Set<String>
+        if(user.roles) user.roles.collect { it.role.authority } as Set<String>
         AuthenticationResponse.success(user.username, authorities)
     }
 
