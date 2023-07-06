@@ -127,25 +127,17 @@ changes for security and JWT. Here is the list of changes:
   This class uses the following annotations: @Entity, @ToString, @Id, @GeneratedValue, @Version, 
   @NotNull, @NotEmpty.
 - [domain/User](src/main/groovy/com/example/domain/User.groovy). The User domain is updated to have a 
-  one-to-many relationship with Role since a user can have multiple roles. The new annotation
-  is: **'@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)'**. This annotation indicates
-  the relationship to UserRole, which is the reference table. The fetch type is set to eager since
-  we want the roles to be loaded when the user is loaded
-- [domain/UserRole](src/main/groovy/com/example/domain/UserRole.groovy). This is the reference table
-  between User and Role. This class uses the following annotations:
-  - @EmbeddedId. This annotation refers to a composite key. The composite key is defined in the 
-    class [UserRoleKey](src/main/groovy/com/example/domain/UserRoleKey.groovy)
-  - @ManyToOne. This annotation indicates that the relationship is many-to-one. The many side is
-    the User and the one side is the Role. The other @ManyToOne annotation is for the Role side. 
-    This makes the relationship a many-to-many relationship.
-  - @MapsId("userId"). This annotation is used to map the composite key. The ID is the name of the 
-    field in the composite key class
-  - @JoinColumn(name = "user_id"). This annotation is used to specify the column name for the 
-    relationship. The name is the name of the field in the database
-- [domain/UserRoleKey](src/main/groovy/com/example/domain/UserRoleKey.groovy). This is the composite
-    key class for the UserRole class. This class uses the following annotations:
-    - @Embeddable. This annotation indicates that this class is a composite key definition
-    - @Column. This annotation is used to specify the column name for the field
+  Many-to-many relationship with Role since a user can have multiple roles and a role can be assigned
+  to multiple users. The new annotation is: **'@ManyToMany(mappedBy = "user", fetch = FetchType.EAGER)'**. 
+  This annotation indicates the relationship to Role. The fetch type is set to eager since we want the roles 
+  to be loaded when the user is loaded. In addition, we use the **@JoinTable** annotation to specify the
+  reference table. The reference table is the intermediate table to make User and Role a
+  many-to-many relationship. The **@JoinTable** annotation has the following attributes:
+  - **name**. This is the name of the reference table
+  - **joinColumns**. This is the column that is used to join the User table to the reference table
+  - **inverseJoinColumns**. This is the column that is used to join the Role table to the reference table
+  - **uniqueConstraints**. This is used to specify the unique constraint for the reference table
+  - **schema**. This is used to specify the schema for the reference table
 - [repository/RoleRepository](src/main/groovy/com/example/repository/RoleRepository.groovy). This is the 
   repository for Role. This class uses the following annotations: @Repository, @Transactional
 - [repository/UserRepository](src/main/groovy/com/example/repository/UserRepository.groovy). 
