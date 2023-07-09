@@ -296,3 +296,38 @@ jpa:
 
 Since we are creating a new flow for db creation, the [run-mysql.sh](run-mysql.sh) script should be run
 to create the new DB schema via Flyway.
+
+### 4.Containerization
+This branch adds the containerization of the application. The application is containerized using Docker.
+The following files are added to this branch:
+- [.dockerignore](.dockerignore). This file is used to ignore files when creating the Docker image
+- [build-image.sh](build-image.sh). This file is a reference script used to build the Docker image for the 
+  application. This file helps understand the creation of the docker image. The Docker image is created 
+  using the Dockerfile. The **build-image.sh** will likely get called by the CI/CD pipeline
+- [Dockerfile](Dockerfile). This file is used to create the Docker image for the application. The Dockerfile 
+  receives environment variables and are mapped via **ARG**. The **build-image.sh and run-image.sh** scripts 
+  will pass the environment variables during the build and run of the container respectively. The
+  image used for creating the application image is a distroless image. The distroless image is a minimal
+  image that only contains the application and its dependencies. The distroless image used is the
+  [gcr.io/distroless/java17-debian11](https://github.com/GoogleContainerTools/distroless/tree/main)
+- [ecr-push-image.sh](ecr-push-image.sh). This file is a reference script used to push the Docker image to 
+  the AWS ECR repository. The **ecr-push-image.sh** will likely get called by the CI/CD pipeline
+- [run-image.sh](run-image.sh). This file is a reference script used to run the Docker image for the 
+  application. This file helps understand the running of the docker image. This script should be called 
+  after the **build-image.sh**. The **run-image.sh** will likely get called by the CI/CD pipeline
+- [run-mysql.sh](run-mysql.sh). This file was changed to use the new environment variables set by **set-env.sh**. 
+- [set-env.sh](set-env.sh). This file was changed to use more descriptive environment variables. In addition, 
+  the **set-env.sh** script now detects the OS and set the **hostIP** accordingly. Windows is not supported directly,
+  so, Windows users should use WSLv2 to use this project
+- [setup-schema.sql](setup-schema.sql). This file was changed to use the new environment variables set 
+  by **set-env.sh**
+- [application.yml](/src/main/resources/application.yml). This file was changed to use the new environment 
+  variables set by **set-env.sh**. In addition, the server port is configurable. The Dockerfile can set the new
+  port number
+- [controller/UserController](/src/main/groovy/com/example/controller/UserController.groovy). 
+  This class was changed because there was an issue with the initial page. The initial pages was
+  set to 0, but the page number should start at 1. So, the initial page was changed to 1
+- [service/UserService](/src/main/groovy/com/example/service/UserService.groovy). 
+  This class was changed to add more comments about how pagination works with sorting
+- [controller/UserControllerSpec](/src/test/groovy/com/example/controller/UserControllerSpec.groovy). 
+  This class was changed from page 1 to page 0 because the initial page should be 0

@@ -65,13 +65,18 @@ class UserService {
      * @return a Page of users. This page can continue if needed
      */
     List<User> getUsers(int page, int size){
+        // if we need to order the page by a single field, we can do this:
+        // def sortOrder = Sort.Order.asc("id")
+        // Sort sort = Sort.of(sortOrder)
+        // def pages = Pageable.from(page, size, sort)
+
+        // Using multiple order fields requires a list of Sort.Order
         // creating sorting order for the query
         List<Sort.Order> orders = new ArrayList<Sort.Order>()
         // as an example, we are sorting by id
-        orders << new Sort.Order("id", Sort.Order.Direction.ASC, false)
+        orders << new Sort.Order("id", Sort.Order.Direction.ASC, true)
         // now create the pageable object
         def pages = Pageable.from(page, size, Sort.of(orders))
-
         def sliceOfUsers = userRepository.list(pages)
 
         if(sliceOfUsers == null) return []

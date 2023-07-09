@@ -39,10 +39,10 @@ echo "Copying schema setup-schema.sql to container: $MYSQL_CONTAINER_NAME"
 docker cp setup-schema.sql "$MYSQL_CONTAINER_NAME":/setup-schema.sql
 
 #executing the schema setup
-echo "Creating schema in DB with details. DB: $MYSQL_DBNAME, user: $MYSQL_USER, pass: $MYSQL_PASSWORD"
+echo "Creating schema in DB with details. DB: $BOILERPLATE_MYSQL_DBNAME, user: $BOILERPLATE_MYSQL_USER, pass: $BOILERPLATE_MYSQL_PASSWORD"
 docker exec -i "$MYSQL_CONTAINER_NAME" \
 mysql -uroot -proot \
--e "SET @MYSQL_DBNAME='$MYSQL_DBNAME';
-SET @MYSQL_USER='$MYSQL_USER';
-SET @MYSQL_PASSWORD='$MYSQL_PASSWORD';
+-e "SET @BOILERPLATE_MYSQL_DBNAME='$BOILERPLATE_MYSQL_DBNAME';
+SET @BOILERPLATE_MYSQL_USER='$BOILERPLATE_MYSQL_USER';
+SET @BOILERPLATE_MYSQL_PASSWORD='$BOILERPLATE_MYSQL_PASSWORD';
 source setup-schema.sql;"

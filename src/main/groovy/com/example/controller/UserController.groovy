@@ -33,17 +33,17 @@ class UserController {
     /**
      * Endpoint for /users using GET. This endpoint uses pagination by
      * providing the page number and size of the page
-     * @param page the page number for the pagination
-     * @param size the size of the page for the pagination
+     * @param page the page number for the pagination. Pages start at 0. Default is 0
+     * @param size the size of the page for the pagination. Default is 10
      * @return a list of users
      *
      * Why is this not working? This makes more sense that the one that works!
      * List<User> getUsers(@Nullable @QueryValue Integer start=0, @Nullable @QueryValue Integer end=10)
      */
     @Get
-    List<User> getUsers(@Nullable @QueryValue(defaultValue = "1") Integer page,
+    List<User> getUsers(@Nullable @QueryValue(defaultValue = "0") Integer page,
                         @Nullable @QueryValue(defaultValue = "10") Integer size) {
-        if(page < 1) page = 1
+        if(page < 0) page = 0
         if(size < 1 || size > 100) size = 10
 
         log.info("page=${page}; size=${size}")
