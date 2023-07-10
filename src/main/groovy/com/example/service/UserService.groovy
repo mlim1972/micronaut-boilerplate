@@ -53,7 +53,6 @@ class UserService {
         try{
             userRepository.findOneByUsername(username)
         } catch (Exception e) {
-            log.error("Error finding user by username: ${username}", e)
             null
         }
     }

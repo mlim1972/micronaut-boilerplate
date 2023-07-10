@@ -70,7 +70,7 @@ class LoginControllerSpec extends Specification{
 
         when: 'passing the access token as in the Authorization HTTP Header with the prefix Bearer allows the user to access a secured endpoint'
         String accessToken = bearerAccessRefreshToken.accessToken
-        HttpRequest requestWithAuthorization = HttpRequest.GET('/hello' )
+        HttpRequest requestWithAuthorization = HttpRequest.GET('/hello/protected' )
                 .accept(TEXT_PLAIN)
                 .bearerAuth(accessToken)
         HttpResponse<String> response = client.toBlocking().exchange(requestWithAuthorization, String)

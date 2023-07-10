@@ -24,6 +24,15 @@ class HelloControllerSpec extends Specification {
         String rsp = client.toBlocking().retrieve(request)
 
         then:
+        rsp == "Hello World!!!"
+    }
+
+    void "test hello world response"() {
+        when:
+        HttpRequest request = HttpRequest.GET('/hello/protected')
+        String rsp = client.toBlocking().retrieve(request)
+
+        then:
         HttpClientResponseException e = thrown()
         e.status == UNAUTHORIZED
     }

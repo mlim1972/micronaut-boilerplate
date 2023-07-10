@@ -7,6 +7,11 @@ micronaut:
     authentication: bearer
     token:
       jwt:
+        generator:
+          access-token:
+            expiration: ${BOILERPLATE_ACCESS_TOKEN_EXPIRATION:18000}  # 5 hours
+        cookie:
+          enabled: false
         signatures:
           secret:
             generator:
