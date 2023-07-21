@@ -27,7 +27,7 @@ class DeclarativeHttpClientWithJwtSpec extends Specification{
 
     void "Verify JWT authentication works with declarative @Client"() {
         given:
-        def index = 0
+        def index = UUID.randomUUID().toString()
         def username = "${prefix}-${index}.email@email.com".toString()
         def password = plainPassword.toString()
         println("username: $username; password: $password")
