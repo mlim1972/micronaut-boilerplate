@@ -1,6 +1,6 @@
-package com.example.services
+package com.example.service
 
-import io.micronaut.http.HttpRequest
+
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification

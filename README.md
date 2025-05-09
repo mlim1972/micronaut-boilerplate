@@ -4,8 +4,8 @@ This repo is a boilerplate for [Micronaut](https://micronaut.io/). The project w
 the [launch button](https://micronaut.io/launch/) in their website. The initial project uses
 the following configuration:
 - Type: Micronaut Application
-  - Micronaut Version: 3.74
-- Java Version: 11
+  - Micronaut Version: 4.8.2
+- Java Version: 21
   - Language: Groovy
 - Name: boilerplate
 - Build Tool: Gradle
@@ -42,8 +42,8 @@ The main branch is the initial project configured as mentioned above and followi
 [CREATING YOUR FIRST MICRONAUT APPLICATION](https://guides.micronaut.io/latest/creating-your-first-micronaut-app-gradle-groovy.html)
 guide with a few changes:
 - Used Launch Button from the website rather than using the CLI
-- [HelloController](src/main/groovy/com/example/controllers/HelloController.groovy) is in a folder called controllers, so we can add all our controllers here
-- Added a service class [HelloService](src/main/groovy/com/example/services/HelloService.groovy) under the services folder to store all our services
-- Created [controllers](src/test/groovy/com/example/controllers) and 
-  [services](src/test/groovy/com/example/services) test files 
+- [HelloController](src/main/groovy/com/example/controller/HelloController.groovy) is in a folder called controllers, so we can add all our controllers here
+- Added a service class [HelloService](src/main/groovy/com/example/service/HelloService.groovy) under the services folder to store all our services
+- Created [controller](src/test/groovy/com/example/controller) and 
+  [service](src/test/groovy/com/example/service) test files 
   for their corresponding classes
