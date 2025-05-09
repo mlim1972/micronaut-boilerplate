@@ -4,8 +4,8 @@ This repo is a boilerplate for [Micronaut](https://micronaut.io/). The project w
 the [launch button](https://micronaut.io/launch/) in their website. The initial project uses
 the following configuration:
 - Type: Micronaut Application
-  - Micronaut Version: 3.74
-- Java Version: 11
+  - Micronaut Version: 4.8.2
+- Java Version: 21
   - Language: Groovy
 - Name: boilerplate
 - Build Tool: Gradle
@@ -99,3 +99,4 @@ Here is the list of changes:
 - [application-test.yml](src/test/resources/application-test.yml). This configuration
   file is used for testing. It uses H2 database for testing. This is a in-memory database
   that is used for testing. The database is created and destroyed for each test
+
