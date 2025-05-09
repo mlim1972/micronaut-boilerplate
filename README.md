@@ -4,8 +4,8 @@ This repo is a boilerplate for [Micronaut](https://micronaut.io/). The project w
 the [launch button](https://micronaut.io/launch/) in their website. The initial project uses
 the following configuration:
 - Type: Micronaut Application
-  - Micronaut Version: 3.74
-- Java Version: 11
+  - Micronaut Version: 4.8.2
+- Java Version: 21
   - Language: Groovy
 - Name: boilerplate
 - Build Tool: Gradle
