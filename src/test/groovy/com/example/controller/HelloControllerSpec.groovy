@@ -1,4 +1,4 @@
-package com.example.controllers
+package com.example.controller
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
