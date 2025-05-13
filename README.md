@@ -209,23 +209,19 @@ and the database schema changes, Flyway will be used to update the database sche
 Flyway creates a table in the database to keep track of the changes. The table is called
 **'flyway_schema_history'**. This table is used to keep track of the changes that have been
 applied to the database. The table has the following columns:
-- installed_rank. This column is used to keep track of the order of the changes
-- version. This column is used to keep track of the version of the change
-- description. This column is used to keep track of the description of the change
-- type. This column is used to keep track of the type of the change
-- script. This column is used to keep track of the script that was used to make the change
-- checksum. This column is used to keep track of the checksum of the change
-- installed_by. This column is used to keep track of the user that installed the change
-- installed_on. This column is used to keep track of the date and time that the change was installed
-- execution_time. This column is used to keep track of the execution time of the change
-- success. This column is used to keep track of the success of the change
+- installed_rank. This column is used track the order of changes
+- version. This column is used track the version of changes
+- description. This column is used to track the description of changes
+- type. This column is used to track the type of changes
+- script. This column is used to track the script used to make changes
+- checksum. This column is used to track the checksum of the changes
+- installed_by. This column is used to track the user that installed the changes
+- installed_on. This column is used to track the date and time when the changes were installed
+- execution_time. This column is used to track the execution time of the changes
+- success. This column is used to track the success of the changes
 
 The following files are changed to this branch:
-- [build.gradle](build.gradle). Removed dependencies to Test Containers. Dependencies to
-     Flyway and MySQL were already added from previous branches
 - [README.md](README.md). This file was updated to add information about Flyway
-- [run-mysql](run-mysql.sh). Updated the pull of MySQL version to v8 since 5.7 is no longer
-     supported by Flyway
 - [setenv.sh](setenv.sh). Updated the MYSQL URL to include a new parameter needed to connect
      to the MYSQL v8.0. The parameter is **'allowPublicKeyRetrieval=true'**
 - [/domain/Role](src/main/groovy/com/example/domain/Role.groovy). This class was updated to
@@ -240,32 +236,21 @@ The following files are changed to this branch:
 - [/domain/UserRoleKey](src/main/groovy/com/example/domain/UserRoleKey.groovy). This class was updated to
      add the following annotation **@EqualsAndHashCode**. This annotation is used to generate
      the equals and hashcode methods
-- [/repository/UserRepository](/src/main/groovy/com/example/repository/UserRepository.groovy). This class was updated to
-     change the base class from **CrudRepository** to **PageableRepository** in order to support
-     **list** as a pageable method
-- [/controller/UserController](/src/main/groovy/com/example/controller/UserController.groovy). The get
-  user pagination was updated to use the new **list** method in the **UserService**. The method was uupdated
-  to receive the page and the page size as parameters
+- [/controller/UserController](/src/main/groovy/com/example/controller/UserController.groovy). 
+  The getUsers method was updated to receive the page and the page size as parameters
 - [/service/UserService](/src/main/groovy/com/example/service/UserService.groovy). This class was updated
-     to change the **list** method to use Pageable and Sort to get a list of users by page and sort
-- [application.yml](/src/main/resources/application.yml). Added a parameter to the db connectivity due to 
-     upgrading the DB to MySQL v8.0. In addition, since we are using Flyway to manage the database schema
-     we will create DDL schema manually and hence the **jpa.default.property.hibernate.hbm2ddl.auto** 
-     is set from **update** to **none**.
-```yaml
-jpa:
-  default:
-    properties:
-      hibernate:
-        format_sql: false
-        show_sql: false
-        hbm2ddl:
-          auto: none
+     to change the **list** method to use Pageable
+- [application.properties](/src/main/resources/application.properties). Added a parameter to configure
+     Flyway to manage the database schema. Added connection parameters for the initial and max pool size.
+     We will create DDL schema manually, hence the 
+     **jpa.default.property.hibernate.hbm2ddl.auto** is set from **update** to **none**.
+```properties
+jpa.default.properties.hibernate.hbm2ddl.auto=none
 ```
 - [/resources/dbmigrations/V1__setting_userandrole.sql](src/main/resources/dbmigrations/V1__setting_userandrole.sql). 
   This file contains the SQL to create the initial database schema. Once this is deployed, this file will not be
   modified. New changes to the database schema will be added to new files. The files will be named in the format
-    **V{version}__{description}.sql**. The version is a number that is used to keep track of the order of the changes.
+    **V{version}__{description}.sql**. The version is a number used to track of the order changes.
   This file in particular sets up the database schema and inserts seed data. So, it creates the following tables:
     - role
     - user
@@ -277,9 +262,9 @@ jpa:
     - EDITOR
 - [/dbmigrationscript/v1/V1_1__seed_user](src/main/resources/db/migration/v1/V1_1__seed_user.sql).
   This is the script to insert seed data for the user table and the user role table. Flyway
-  will run the .sql file above and this file in order to create the database schema and insert
+  will run the .sql file above and this file to create the database schema and insert
   seed data. The reason we need to create a groovy script rather than adding it to the Flyway .sql file
-  is that we need to use some coding not available in the .sql file. The groovy script
+  is that we need to use code that cannot be performed in .sql file. The groovy script
   adds a user to the user table using the encrypted password. Encryption is not available in SQL.
 - [/controller/LoginControllerSpec](/src/test/groovy/com/example/controller/LoginControllerSpec.groovy). 
   This class was updated to change the index when inserting to tables. This is done so that while testing
@@ -294,10 +279,6 @@ jpa:
 - [/service/UserServiceSpec](/src/test/groovy/com/example/service/UserServiceSpec.groovy). 
   This class was updated to change the index when inserting to tables. This is done so that while testing
   there is no conflict with previous data that was inserted to the tables
-- [application-test.yml](/src/test/resources/application-test.yml). This file was blanked out to prevent
-  the test containers from starting MySQL. Since we are using Flyway to manage the database schema, we will
-  create the database schema manually and hence we do not need to start MySQL in the test containers.
-  We want to use the same application.yml as when we run the application
 
 Since we are creating a new flow for db creation, the [run-mysql.sh](run-mysql.sh) script should be run
 to create the new DB schema via Flyway.

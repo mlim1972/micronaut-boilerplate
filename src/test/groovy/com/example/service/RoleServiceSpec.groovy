@@ -20,4 +20,25 @@ class RoleServiceSpec extends Specification {
         saved.version == 0L
         saved.authority == "TestRole"
     }
+
+    void "test add role"() {
+        when:
+        def role = roleService.addRole("AnotherTestRole")
+
+        then:
+        role.id != null
+        role.version == 0L
+        role.authority == "AnotherTestRole"
+    }
+
+    void "test add roles"() {
+        when:
+        def roleNames = ["Role1", "Role2", "Role3"]
+        def roles = roleService.addRoles(roleNames as ArrayList)
+
+        then:
+        roles.size() == 3
+        roles*.authority == roleNames
+        roles.every { it.id != null }
+    }
 }

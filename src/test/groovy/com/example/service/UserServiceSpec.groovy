@@ -183,4 +183,43 @@ class UserServiceSpec extends Specification{
         user.roles.size() == 1
         ((Role)user.roles[0]).authority == role.authority
     }
+
+    void "test updating user roles"() {
+        def index = UUID.randomUUID().toString()
+
+        given:
+        def role1 = roleService.addRole("RoleA")
+        def role2 = roleService.addRole("RoleB")
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john8@email.com".toString(),
+                     password: "123456", notes: "This is a test", roles: [role1]]
+        def user = userService.saveUser(props)
+
+        when:
+        def updateProps = [roles: [role2]]
+        def updatedUser = userService.updateUser(user.id, updateProps)
+
+        then:
+        updatedUser.roles.size() == 1
+        ((Role)updatedUser.roles[0]).authority == role2.authority
+    }
+
+    void "test removing roles from user"() {
+        def index = UUID.randomUUID().toString()
+
+        given:
+        def role1 = roleService.addRole("RoleX")
+        def role2 = roleService.addRole("RoleY")
+        def props = [firstName: "John", lastName: "Doe",
+                     username: "${prefix}-${index}.john9@email.com".toString(),
+                     password: "123456", notes: "This is a test", roles: [role1, role2]]
+        def user = userService.saveUser(props)
+
+        when:
+        def updateProps = [roles: []]
+        def updatedUser = userService.updateUser(user.id, updateProps)
+
+        then:
+        updatedUser.roles.size() == 0
+    }
 }
