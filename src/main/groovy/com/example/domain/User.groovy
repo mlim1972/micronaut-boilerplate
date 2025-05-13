@@ -5,6 +5,11 @@ import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.DateUpdated
 
 import io.micronaut.serde.annotation.Serdeable
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.UniqueConstraint
 
 import java.time.Instant // or java.time.LocalDateTime
 
@@ -20,7 +25,6 @@ import jakarta.persistence.Column
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotNull
-
 
 /**
  * Entity class for User. This class is the representation of the User
@@ -68,7 +72,7 @@ class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             schema = "public",
             uniqueConstraints = [
-                @javax.persistence.UniqueConstraint(
+                @UniqueConstraint(
                         name = "UK_USERROLE_USERID_ROLEID_KEY",
                         columnNames = ["user_id", "role_id"]
                 )

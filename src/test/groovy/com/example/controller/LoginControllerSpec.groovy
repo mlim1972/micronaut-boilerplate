@@ -9,7 +9,7 @@ import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.security.authentication.UsernamePasswordCredentials
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken
+import io.micronaut.security.token.render.BearerAccessRefreshToken
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
@@ -78,5 +78,30 @@ class LoginControllerSpec extends Specification{
         then:
         response.status == OK
         response.body() == "Hello ${props.username}"
+    }
+
+    void 'Login with invalid credentials returns unauthorized'() {
+        given:
+        UsernamePasswordCredentials creds = new UsernamePasswordCredentials("invalid.user@email.com", "wrongpassword")
+
+        when:
+        HttpRequest request = HttpRequest.POST('/login', creds)
+        client.toBlocking().exchange(request, BearerAccessRefreshToken)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == UNAUTHORIZED
+    }
+
+    void 'Accessing a secured URL with an invalid token returns unauthorized'() {
+        when:
+        HttpRequest requestWithAuthorization = HttpRequest.GET('/hello')
+                .accept(TEXT_PLAIN)
+                .bearerAuth("invalid_jwt_token") // Provide an invalid token
+        client.toBlocking().exchange(requestWithAuthorization, String)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == UNAUTHORIZED
     }
 }

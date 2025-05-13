@@ -1,20 +1,18 @@
 package com.example.service.security
 
-import io.micronaut.security.authentication.AuthenticationException
-import reactor.core.publisher.FluxSink
+import io.micronaut.core.annotation.NonNull
+import io.micronaut.core.annotation.Nullable
 
 import com.example.domain.User
 import com.example.service.UserService
 import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.security.authentication.AuthenticationFailed
-import io.micronaut.security.authentication.AuthenticationProvider
+import io.micronaut.security.authentication.provider.AuthenticationProvider
+
 import io.micronaut.security.authentication.AuthenticationRequest
 import io.micronaut.security.authentication.AuthenticationResponse
-import io.micronaut.http.HttpRequest
 import jakarta.inject.Named
 import jakarta.inject.Singleton
-import org.reactivestreams.Publisher
-import reactor.core.publisher.Flux
 import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
 
@@ -26,6 +24,10 @@ import static io.micronaut.security.authentication.AuthenticationFailureReason.C
 import static io.micronaut.security.authentication.AuthenticationFailureReason.PASSWORD_EXPIRED
 import static io.micronaut.security.authentication.AuthenticationFailureReason.USER_DISABLED
 import static io.micronaut.security.authentication.AuthenticationFailureReason.USER_NOT_FOUND
+
+
+//Use io.micronaut.security.authentication.provider.AuthenticationProvider for an imperative API or
+//io.micronaut.security.authentication.provider.ReactiveAuthenticationProvider for a reactive API instead.
 
 @Singleton
 class AuthProviderService implements AuthenticationProvider {
@@ -67,24 +69,25 @@ class AuthProviderService implements AuthenticationProvider {
 
     private AuthenticationResponse createSuccessfulAuthenticationResponse(User user) {
         Set<String> authorities = [] as Set<String>
-        if(user.roles) user.roles.collect { it.role.authority } as Set<String>
+        if(user.roles) user.roles.collect { it.authority } as Set<String>
         AuthenticationResponse.success(user.username, authorities)
     }
 
-    @Override
-    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
 
-        Flux.create { emitter ->
-            User user = userService.findByUsername(authenticationRequest.identity.toString())
-            AuthenticationFailed authenticationFailed = validate(user, authenticationRequest)
-            if (authenticationFailed) {
-                emitter.error(new AuthenticationException(authenticationFailed))
-            } else {
-                emitter.next(createSuccessfulAuthenticationResponse(user))
-                emitter.complete()
-            }
-        }.subscribeOn(scheduler)
-    }
+//    @Override
+//    Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+//
+//        Flux.create { emitter ->
+//            User user = userService.findByUsername(authenticationRequest.identity.toString())
+//            AuthenticationFailed authenticationFailed = validate(user, authenticationRequest)
+//            if (authenticationFailed) {
+//                emitter.error(new AuthenticationException(authenticationFailed))
+//            } else {
+//                emitter.next(createSuccessfulAuthenticationResponse(user))
+//                emitter.complete()
+//            }
+//        }.subscribeOn(scheduler)
+//    }
 
     // Hardcoded validation for a user with username "sherlock" and password "password"
 //    Publisher<AuthenticationResponse> authenticate(@Nullable HttpRequest<?> httpRequest,
@@ -98,4 +101,28 @@ class AuthProviderService implements AuthenticationProvider {
 //            }
 //        }, FluxSink.OverflowStrategy.ERROR)
 //    }
+
+    @Override
+    AuthenticationResponse authenticate(@Nullable Object requestContext, @NonNull AuthenticationRequest authRequest) {
+        User user = userService.findByUsername(authRequest.identity.toString())
+        AuthenticationFailed authenticationFailed = validate(user, authRequest)
+
+        if (authenticationFailed) {
+            return AuthenticationResponse.failure()
+        } else {
+            return createSuccessfulAuthenticationResponse(user)
+        }
+    }
+
+    @Override
+    AuthenticationResponse authenticate(@NonNull AuthenticationRequest authRequest) {
+        User user = userService.findByUsername(authRequest.identity.toString())
+        AuthenticationFailed authenticationFailed = validate(user, authRequest)
+
+        if (authenticationFailed) {
+            return AuthenticationResponse.failure()
+        } else {
+            return createSuccessfulAuthenticationResponse(user)
+        }
+    }
 }

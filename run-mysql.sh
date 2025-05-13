@@ -17,7 +17,7 @@ if [ "$(docker ps -a -q -f name="$MYSQL_CONTAINER_NAME")" ]; then
 fi
 
 #get mysql server running in port 6603
-docker run -d --name="$MYSQL_CONTAINER_NAME" --env="MYSQL_ROOT_PASSWORD=root" -p 3306:3306 mysql:5.7.40
+docker run -d --name="$MYSQL_CONTAINER_NAME" --env="MYSQL_ROOT_PASSWORD=root" -p "$MYSQL_PORT":3306 mysql:8.0.42
 
 #wait for mysql server to come up
 echo "Waiting for MySQL container to come up."
