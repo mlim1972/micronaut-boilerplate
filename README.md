@@ -108,19 +108,22 @@ Here is the list of changes:
   - Port: 3306
 
 ### 2.MySQL
-This branch adds a good amount of changes. Mainly, the changes are around using MySQL that 
+This branch adds a good number of changes. Mainly, the changes are around using MySQL that 
 starts as a container and setup the schema ownership to a specific user. Also, there are
 changes for security and JWT. Here is the list of changes:
 - [build.gradle](build.gradle). New entries are added to the build file:
   - Security annotation and JWT
-  - Reactor for UI
+  - Reactor
 - [run-mysql.sh](run-mysql.sh). This script will start a MySQL container and create a user 
   and database for the application. The script will also create the schema and grant ownership 
   to the user
+- [rest-test.http](rest-test.http). This file contains the test cases for the
+  running application. The test cases are written in HTTP format and can be run using the 
+  native IntelliJ UI.
 - [setenv.sh](setenv.sh). This script will set the environment variables for the application
   to use like the database URL, username, and password.
 - [setup-schema.sh](setup-schema.sql). This script will setup the database schema and grant
-  ownership to the user
+  ownership to the user. it gets executed by the run-mysql.sh script.
 - [controller/HelloController](src/main/groovy/com/example/controller/HelloController.groovy). 
   Updated the class to be protected by the security annotation **'@Secured("isAuthenticated()")'** 
   and the GET endpoint is now requesting for the principal to be passed in
@@ -161,11 +164,10 @@ changes for security and JWT. Here is the list of changes:
   This class uses the following annotations: @Singleton, @Transactional
 - [service/UserService](src/main/groovy/com/example/service/UserService.groovy). 
   Added a couple of methods and updated the existing methods
-- [resources/application.yml](src/main/resources/application.yml). Updated the configuration file
-  to use MySQL directly rather than testcontainers. 
-  The configuration file also has the security configuration. The security
+- [resources/application.yml](src/main/resources/application.properties). Updated the configuration file
+  to add security configuration. The security
   configuration is used to configure the authentication provider and the JWT configuration.
-  Notice the $ sign as the value for some of the properties. This is used to get the value from
+  Notice the $ sign as the value for some properties. This is used to get the value from
   the environment variables. The environment variables are set in the script [setenv.sh](setenv.sh).
   Example: **'${JWT_SECRET}'**. This will get the value from the environment variable JWT_SECRET
 
@@ -176,30 +178,26 @@ database as a container, **Docker should be installed** in the local environment
 [Docker Desktop](https://www.docker.com/products/docker-desktop).
 
 ```bash
-source setenv.sh
 ./run-mysql.sh
 ```
 
 After running the command above, the DB will be running and setup with a schema
 and a username and password from the [setenv.sh](setenv.sh) script. If you connect
-to the DB, you will notice that there is no tables in the schema. This is because
+to the DB, you will notice that there are no tables in the schema. This is because
 the application will create the tables when it starts. What makes this
-possible is the section on JPA in the [application.yml](src/main/resources/application.yml)
+possible is the section on JPA in the [application.properties](src/main/resources/application.properties)
 file. The property **'jpa.default.properties.hibernate.hbm2ddl.auto'** is set to **'update'**.
 
-```yaml
-jpa:
-  default:
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
+```properties
+jpa.default.properties.hibernate.show_sql=false
+jpa.default.properties.hibernate.format_sql=false
+jpa.default.properties.hibernate.hbm2ddl.auto=update
 ```
 
-At this point you can start the application via gradle.
+At this point you can start the application via Gradle.
 
-Note: To run all test is still possible without starting MySQL since the tests are using H2
-database and 
+Note: All tests run against test containers. The test containers will start a MySQL
+database via testcontainers. 
 
 ### 2.Flyway
 [Flyway](https://flywaydb.org/) is a database migration tool. It is used to manage the database schema and data.
@@ -373,4 +371,3 @@ JWT information can be found in this great article:
 https://guides.micronaut.io/latest/micronaut-security-jwt-gradle-groovy.html 
 
 The article above also covers how to generate a refresh token. The refresh token is not implemented in this project.
-

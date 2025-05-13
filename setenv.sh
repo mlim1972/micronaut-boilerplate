@@ -27,15 +27,13 @@ export IMAGE_NAME=micronaut-boilerplate-image
 # MySQL Container name running on host
 export MYSQL_CONTAINER_NAME=my-mysql
 
-# Application PORT and JAVA_OPTS
-export BOILERPLATE_PORT=8080
-export BOILERPLATE_JAVA_OPTS="-Xmx1g -Xms1g"
+# Set MySQL env vars
+export HOST_IP=$hostIp
+export MYSQL_DBNAME=demo
 
-# DB specific env vars
-export BOILERPLATE_MYSQL_DBNAME=demo
-export BOILERPLATE_MYSQL_URL="jdbc:mysql://$MYSQL_CONTAINER_NAME:3306/$BOILERPLATE_MYSQL_DBNAME?allowPublicKeyRetrieval=true&useSSL=true"
-export BOILERPLATE_MYSQL_USER=demouser
-export BOILERPLATE_MYSQL_PASSWORD=demopasswd
+export MYSQL_PORT=3306
+export MYSQL_URL="jdbc:mysql://$HOST_IP:$MYSQL_PORT/$MYSQL_DBNAME?allowPublicKeyRetrieval=true&useSSL=true"
+export MYSQL_USER=demouser
+export MYSQL_PASSWORD=demopasswd
 
-# JWT specific env vars
 export JWT_GENERATOR_SIGNATURE_SECRET="ns#tzdgf8&^&;PiojTDtwibm49q34rqsg-^/erh5"
