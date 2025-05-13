@@ -5,8 +5,8 @@ import com.example.repository.RoleRepository
 import groovy.util.logging.Slf4j
 import jakarta.inject.Singleton
 
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
+import jakarta.persistence.EntityManager
+import jakarta.transaction.Transactional
 
 @Singleton
 @Transactional

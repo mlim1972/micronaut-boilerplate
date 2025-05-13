@@ -49,6 +49,8 @@ dependencies {
     // Security for authentication
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     implementation("io.micronaut.security:micronaut-security-jwt")
+    // Reactor
+    implementation("io.micronaut.reactor:micronaut-reactor")
 
     // Reactor
     implementation("io.micronaut.reactor:micronaut-reactor")
