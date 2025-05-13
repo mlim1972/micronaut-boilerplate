@@ -1,0 +1,44 @@
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{"firstName":"User1",
+  "lastName":"LastName1",
+  "username":"user1@yahoo.com",
+  "password":"user1password"}
+
+###
+GET http://localhost:8080/users
+
+> {%
+    // Test 1: Check for successful status code
+    client.test("Request was successful (status 200)", function() {
+        client.assert(response.status === 200, "Response status was " + response.status + " but expected 200");
+    });
+%}
+
+###
+GET http://localhost:8080/hello
+
+###
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{"username":"user1@yahoo.com",
+  "password":"user1password"}
+
+> {%
+    // Access the response body (IntelliJ automatically parses JSON responses)
+    // Assuming your API returns a JSON object with a "token" field
+    var token = response.body.access_token;
+
+    // Store the token in a global variable named "authToken"
+    client.global.set("authToken", token);
+
+    // Log to the console to confirm
+    client.log("Auth token captured: " + token);
+%}
+
+###
+GET http://localhost:8080/hello
+Authorization: Bearer {{authToken}}
