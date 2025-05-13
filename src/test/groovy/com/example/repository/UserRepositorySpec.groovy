@@ -5,7 +5,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
 
-import javax.persistence.EntityManager
+import jakarta.persistence.EntityManager
 
 @MicronautTest
 class UserRepositorySpec extends Specification{
@@ -21,6 +21,7 @@ class UserRepositorySpec extends Specification{
         when:
         def user = new User(firstName: "john", lastName: "doe", username: "${prefix}.john@email.com", password: "12345")
         def saved = userRepository.save(user)
+        userRepository.flush() // Ensure changes are flushed to the database
 
         then:
         saved.id != null

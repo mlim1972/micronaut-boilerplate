@@ -8,9 +8,9 @@ import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
 
-import javax.persistence.EntityManager
-import javax.persistence.LockModeType
-import javax.transaction.Transactional
+import jakarta.persistence.EntityManager
+import jakarta.persistence.LockModeType
+import jakarta.transaction.Transactional
 
 /**
  * This is the UserService class. All actions over User should be done via this
@@ -27,6 +27,7 @@ class UserService {
 
     // The password encoder
     BCryptPasswordEncoderService passwordEconder = new BCryptPasswordEncoderService()
+    //BCryptPasswordEncoderService passwordEconder
 
     UserService(UserRepository userRepository, EntityManager entityManager){
         this.userRepository = userRepository
@@ -34,9 +35,11 @@ class UserService {
     }
 
     /**
-     * This method gets the user by Id
-     * @param id is the id of the user
-     * @return the user from the DB. Otherwise, it returns null
+     * This method returns a user based on the ID. If the user is not found, it
+     * returns null
+     * @param id the user ID to be searched
+     * @param detached if the user should be detached from the EntityManager
+     * @return the User entity or null if not found
      */
     User getUser(Long id, Boolean detached=true) {
         def user = entityManager.find(User.class, id, LockModeType.NONE)
@@ -77,10 +80,14 @@ class UserService {
         orders << new Sort.Order("id", Sort.Order.Direction.ASC, true)
         // now create the pageable object
         def pages = Pageable.from(page, size, Sort.of(orders))
-        def sliceOfUsers = userRepository.list(pages)
 
-        if(sliceOfUsers == null) return []
-        sliceOfUsers.getContent()
+        // def sliceOfUsers = userRepository.list(pages)
+
+        // if(sliceOfUsers == null) return []
+        // sliceOfUsers.getContent()
+
+        //userRepository.findAll(page)
+        userRepository.list(page)
     }
 
     /**
@@ -112,6 +119,11 @@ class UserService {
         entityManager.flush()
         if(detached) entityManager.detach(user)
         user
+
+        //def user2 = userRepository.save(user)
+        //userRepository.flush() // Ensure changes are flushed to the database
+        //if(detached) entityManager.detach(user2)
+        //user2
     }
 
     /**
@@ -130,7 +142,7 @@ class UserService {
         def user = dealWithProps(entity.get(), props)
 
         //userRepository.update(user) // Does NOT work for version
-        // user EntityManager instead; so that optimistic locking can happen
+        // use EntityManager instead; so that optimistic locking can happen
         entityManager.persist(user)
         entityManager.flush()
 
