@@ -14,8 +14,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    implementation("io.micronaut.sql:micronaut-hibernate-jpa")
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
@@ -26,7 +27,9 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("org.flywaydb:flyway-mysql")
-    compileOnly("io.micronaut.validation:micronaut-validation-processor")
+    //compileOnly("io.micronaut.validation:micronaut-validation-processor")
+    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    implementation("io.micronaut.validation:micronaut-validation")
 
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.testcontainers:spock")
@@ -34,14 +37,14 @@ dependencies {
     testImplementation("io.micronaut:micronaut-http-client")
 
     // Crypt library for password encoding
-    implementation("org.springframework.security:spring-security-crypto:6.2.0")
+    implementation("org.springframework.security:spring-security-crypto:6.4.5")
 
     // logging compatibility
     //runtimeOnly("org.slf4j:jcl-over-slf4j")
     implementation("org.slf4j:jcl-over-slf4j")
 
     // Temporary H2 DB for testing only
-    //testRuntimeOnly("com.h2database:h2")
+    // testRuntimeOnly("com.h2database:h2")
 
     // Security for authentication
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
