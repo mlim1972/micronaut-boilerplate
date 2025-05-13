@@ -41,6 +41,7 @@ class UserController {
      * List<User> getUsers(@Nullable @QueryValue Integer start=0, @Nullable @QueryValue Integer end=10)
      */
     @Get
+    @ExecuteOn(TaskExecutors.BLOCKING)
     List<User> getUsers(@Nullable @QueryValue(defaultValue = "1") Integer page,
                         @Nullable @QueryValue(defaultValue = "10") Integer size) {
         if(page < 1) page = 1
@@ -56,6 +57,7 @@ class UserController {
      * @param id is the key for retrieving the user object
      * @return a user object
      */
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Get("/{id}")
     User getUser(Long id) {
         userService.getUser(id)

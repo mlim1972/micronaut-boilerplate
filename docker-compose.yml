@@ -1,0 +1,23 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_8_0_service
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_password
+      # Optional: Create a dedicated database and user upon initialization
+      MYSQL_DATABASE: myappdb
+      MYSQL_USER: myappuser
+      MYSQL_PASSWORD: myappuser_secret_password
+    ports:
+      - "3306:3306" # Expose MySQL on host port 3306
+#    volumes:
+#      - mysql_data:/var/lib/mysql # Persist data
+    # Optional: Set default character set and collation
+    # command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+#volumes:
+#  mysql_data: # Define the named volume for data persistence
