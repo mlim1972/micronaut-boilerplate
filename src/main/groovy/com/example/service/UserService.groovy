@@ -4,6 +4,7 @@ import com.example.domain.User
 import com.example.repository.UserRepository
 import com.example.service.security.BCryptPasswordEncoderService
 import groovy.util.logging.Slf4j
+import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
@@ -67,27 +68,23 @@ class UserService {
      * @param size is the size of the page
      * @return a Page of users. This page can continue if needed
      */
-    List<User> getUsers(int page, int size){
-        // if we need to order the page by a single field, we can do this:
-        // def sortOrder = Sort.Order.asc("id")
-        // Sort sort = Sort.of(sortOrder)
-        // def pages = Pageable.from(page, size, sort)
+    Page<User> getUsers(int page, int size){
+        // // if we need to order the page by a single field, we can do this:
+        // // def sortOrder = Sort.Order.asc("id")
+        // // Sort sort = Sort.of(sortOrder)
+        // // def pages = Pageable.from(page, size, sort)
 
-        // Using multiple order fields requires a list of Sort.Order
-        // creating sorting order for the query
-        List<Sort.Order> orders = new ArrayList<Sort.Order>()
-        // as an example, we are sorting by id
-        orders << new Sort.Order("id", Sort.Order.Direction.ASC, true)
-        // now create the pageable object
-        def pages = Pageable.from(page, size, Sort.of(orders))
-
-        // def sliceOfUsers = userRepository.list(pages)
-
-        // if(sliceOfUsers == null) return []
-        // sliceOfUsers.getContent()
+        // // Using multiple order fields requires a list of Sort.Order
+        // // creating sorting order for the query
+        // List<Sort.Order> orders = new ArrayList<Sort.Order>()
+        // // as an example, we are sorting by id
+        // orders << new Sort.Order("id", Sort.Order.Direction.ASC, true)
+        // // now create the pageable object
+        // def pages = Pageable.from(page, size, Sort.of(orders))
 
         //userRepository.findAll(page)
-        userRepository.list(page)
+        def pages = Pageable.from(page, size)
+        userRepository.list(pages)
     }
 
     /**

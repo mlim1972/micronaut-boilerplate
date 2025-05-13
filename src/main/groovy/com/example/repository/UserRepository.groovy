@@ -2,6 +2,7 @@ package com.example.repository
 
 import com.example.domain.User
 import io.micronaut.data.annotation.Repository
+import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 
 // import io.micronaut.data.model.Slice
