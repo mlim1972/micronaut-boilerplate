@@ -27,6 +27,8 @@ export IMAGE_NAME=micronaut-boilerplate-image
 # MySQL Container name running on host
 export MYSQL_CONTAINER_NAME=my-mysql
 
+export BOILERPLATE_PORT=8080
+
 # Set MySQL env vars
 export HOST_IP=$hostIp
 export MYSQL_DBNAME=demo

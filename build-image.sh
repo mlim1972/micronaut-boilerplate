@@ -19,9 +19,9 @@ if [ "$(docker ps -a -q -f name="$CONTAINER_NAME")" ]; then
 fi
 
 docker build --add-host="$MYSQL_CONTAINER_NAME:$HOST_IP" \
---build-arg BOILERPLATE_MYSQL_USER=$BOILERPLATE_MYSQL_USER \
---build-arg BOILERPLATE_MYSQL_PASSWORD=$BOILERPLATE_MYSQL_PASSWORD \
---build-arg BOILERPLATE_MYSQL_URL=$BOILERPLATE_MYSQL_URL \
+--build-arg MYSQL_USER=$MYSQL_USER \
+--build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
+--build-arg MYSQL_URL=$MYSQL_URL \
 --rm -f "Dockerfile" \
 -t "$IMAGE_NAME":"$version-qa" \
 "."
