@@ -49,14 +49,14 @@ guide with a few changes:
   for their corresponding classes
 
 ### 1.ORM
-This branch adds a good amount of changes. The main addition is the usage of ORM to manage
+This branch adds a good number of changes. The main addition is the usage of ORM to manage
 database actions.
 Here is the list of changes:
 - [build.gradle](build.gradle). New entries are added to the build file:
-  - Micronaut Data Processor. This will work in conjunction to the Micronaut Data and JPA
+  - Micronaut Data Processor. This will work in conjunction with the Micronaut Data and JPA
   - Spring Security Crypto. This library brings the Spring Security Crypto library for password encoding
   - slf4j compatibility layer for logging
-  - H2 DB for runtime testing only
+  - H2 DB for runtime testing only (commented out in case it is needed)
 - [controller/UserController](src/main/groovy/com/example/controller/UserController.groovy).
   A new controller for managing the user endpoints.
   - **@ExecuteOn** annotations that specifies which executor the task should run on 
@@ -69,12 +69,13 @@ Here is the list of changes:
   as an object. This class uses the following annotations:
   - **@Table** annotation to change the name of the database table
   - **@Entity** annotation to make it known by the system that this class is a domain object
+  - **@Serdeable** annotation to make the class serializable. This is important for
+    the serialization of the object when it is returned as a response
   - **@ID** annotation to mark a field as the primary key
   - **@GeneratedValue** annotation expresses how the autogeneration of the ID should be done
   - **@Version** annotation to mark a field as the optimistic locking field
-  - **@NotNull** annotation to mark the fields with not null constraint
   - **@NotEmpty** annotation to mark the field as not blank. Use by the validation engine
-  - **@Column** annotation to specify different property for the column like name, type, etc...
+  - **@Column** annotation to specify different property for the column like name, type, nullable, etc...
   - **@Email** annotation to mark a field as email. The regex is to create a regular expression for the validation engine
   - **@DateCreated** annotation is populated by the engine when a new record is inserted
   - **@DateUpdated** annotation is populated by the engine when a record is updated
@@ -91,12 +92,17 @@ Here is the list of changes:
     this object will be instantiated during the application and hence it is considered
     a service that can be injected into other classes.
   - **@Transactional** annotation at the class level makes each method in the class
-    as execution within a transaction
-- [application.yml](src/main/resources/application.yml). The main configuration file
-  for the application. This configuration uses MySQL via a test container. This means
-  that there is no need to install a database in the local environment. The test container
-  will instantiate a MySQL database and the application will connect to it. 
-- [application-test.yml](src/test/resources/application-test.yml). This configuration
-  file is used for testing. It uses H2 database for testing. This is a in-memory database
-  that is used for testing. The database is created and destroyed for each test
-
+    as execution within a transaction.
+- [application.properties](src/main/resources/application.properties). The main configuration file
+  for the application. This configuration uses MySQL that is started via Docker. So you should start
+  mysql before running the application via docker compose.
+- [application-test.properties](src/test/resources/application-test.properties). This configuration
+  file is used for testing. It uses test containers to start a MySQL database for testing purposes.
+  This can be changed to use H2 if needed. Uncomment the H2 dependency in the build.gradle file and
+  change the datasource to use H2 and comment the MySQL datasource.
+- [docker-compose.yml](docker-compose.yml). This file is used to start the MySQL database
+  for development. The database is started with the following configuration:
+  - Database name: myappdb
+  - User: myappuser
+  - Password: myappuser_secret_password
+  - Port: 3306

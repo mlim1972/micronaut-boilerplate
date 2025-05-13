@@ -39,6 +39,7 @@ class UserController {
      * List<User> getUsers(@Nullable @QueryValue Integer start=0, @Nullable @QueryValue Integer end=10)
      */
     @Get
+    @ExecuteOn(TaskExecutors.BLOCKING)
     List<User> getUsers(@Nullable @QueryValue(defaultValue = "0") Integer start,
                         @Nullable @QueryValue(defaultValue = "10") Integer end) {
         log.info("start=${start}; end=${end}")
@@ -51,6 +52,7 @@ class UserController {
      * @param id is the key for retrieving the user object
      * @return a user object
      */
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @Get("/{id}")
     User getUser(Long id) {
         userService.getUser(id)

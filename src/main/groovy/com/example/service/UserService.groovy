@@ -8,9 +8,9 @@ import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import jakarta.inject.Singleton
 
-import javax.persistence.EntityManager
-import javax.persistence.LockModeType
-import javax.transaction.Transactional
+import jakarta.persistence.EntityManager
+import jakarta.persistence.LockModeType
+import jakarta.transaction.Transactional
 
 /**
  * This is the UserService class. All actions over User should be done via this
@@ -27,12 +27,20 @@ class UserService {
 
     // The password encoder
     BCryptPasswordEncoderService passwordEconder = new BCryptPasswordEncoderService()
+    //BCryptPasswordEncoderService passwordEconder
 
     UserService(UserRepository userRepository, EntityManager entityManager){
         this.userRepository = userRepository
         this.entityManager = entityManager
     }
 
+    /**
+     * This method returns a user based on the ID. If the user is not found, it
+     * returns null
+     * @param id the user ID to be searched
+     * @param detached if the user should be detached from the EntityManager
+     * @return the User entity or null if not found
+     */
     User getUser(Long id, Boolean detached=true) {
         def user = entityManager.find(User.class, id, LockModeType.NONE)
         if(!user) return null
@@ -49,6 +57,7 @@ class UserService {
     Page<User> getUsers(int start, int end){
         def page = Pageable.from(start, end)
 
+        //userRepository.findAll(page)
         userRepository.list(page)
     }
 
@@ -77,6 +86,7 @@ class UserService {
     User saveUser(Map props, Boolean detached=true){
         User user = dealWithProps(new User(), props)
         def user2 = userRepository.save(user)
+        userRepository.flush() // Ensure changes are flushed to the database
         if(detached) entityManager.detach(user2)
         user2
     }
@@ -97,7 +107,7 @@ class UserService {
         def user = dealWithProps(entity.get(), props)
 
         //userRepository.update(user) // Does NOT work for version
-        // user EntityManager instead; so that optimistic locking can happen
+        // use EntityManager instead; so that optimistic locking can happen
         entityManager.persist(user)
         entityManager.flush()
 

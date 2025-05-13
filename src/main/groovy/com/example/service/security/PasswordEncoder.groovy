@@ -1,15 +1,15 @@
 package com.example.service.security
 
-import io.micronaut.core.annotation.NonNull
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
-import javax.validation.constraints.NotBlank
 
 /**
  * Interface that outlines the necessary methods for password encoding
  */
 interface PasswordEncoder {
-    String encode(@NotBlank @NonNull String rawPassword)
+    String encode(@NotBlank @NotNull String rawPassword)
 
-    boolean matches(@NotBlank @NonNull String rawPassword,
-                    @NotBlank @NonNull String encodedPassword)
+    boolean matches(@NotBlank @NotNull String rawPassword,
+                    @NotBlank @NotNull String encodedPassword)
 }
