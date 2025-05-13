@@ -42,11 +42,10 @@ class UserController {
      */
     @Get
     @ExecuteOn(TaskExecutors.BLOCKING)
-    List<User> getUsers(@Nullable @QueryValue(defaultValue = "1") Integer page,
-                        @Nullable @QueryValue(defaultValue = "10") Integer size) {
-        if(page < 1) page = 1
-        if(size < 1 || size > 100) size = 10
-
+    List<User> getUsers(@Nullable @QueryValue(defaultValue = "0") Integer page,
+                        @Nullable @QueryValue(defaultValue = "100") Integer size) {
+        if(page < 0) page = 0
+        if(size < 1 || size > 100) size = 100
         log.info("page=${page}; size=${size}")
 
         userService.getUsers(page, size).toList()

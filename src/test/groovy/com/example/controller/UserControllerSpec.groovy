@@ -11,6 +11,7 @@ import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification
+import com.example.domain.User
 
 @MicronautTest
 class UserControllerSpec extends Specification{
@@ -131,11 +132,11 @@ class UserControllerSpec extends Specification{
 
         when:
         // call api to get the first page of users
-        HttpRequest request = HttpRequest.create(HttpMethod.GET, "/users?page=1&size=10".toString())
+        HttpRequest request = HttpRequest.create(HttpMethod.GET, "/users?page=0&size=10".toString())
                 .accept(MediaType.APPLICATION_JSON_TYPE)
         // get the response. The response in the body type is array of users
-        HttpResponse rsp = client.toBlocking().exchange(request, Argument.of(ArrayList.class), Argument.of(Map.class))
-        ArrayList<Map> users = rsp.body()
+        HttpResponse rsp = client.toBlocking().exchange(request, Argument.listOf(Map.class), Argument.of(Map.class))
+        ArrayList<Map> users = new ArrayList<>(rsp.body());
 
         then:
         rsp.status == HttpStatus.OK

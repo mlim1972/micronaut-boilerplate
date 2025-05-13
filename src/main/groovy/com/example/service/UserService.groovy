@@ -4,6 +4,7 @@ import com.example.domain.User
 import com.example.repository.UserRepository
 import com.example.service.security.BCryptPasswordEncoderService
 import groovy.util.logging.Slf4j
+import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
 import jakarta.inject.Singleton
@@ -67,21 +68,23 @@ class UserService {
      * @param size is the size of the page
      * @return a Page of users. This page can continue if needed
      */
-    List<User> getUsers(int page, int size){
-        // creating sorting order for the query
-        List<Sort.Order> orders = new ArrayList<Sort.Order>()
-        // as an example, we are sorting by id
-        orders << new Sort.Order("id", Sort.Order.Direction.ASC, false)
-        // now create the pageable object
-        def pages = Pageable.from(page, size, Sort.of(orders))
+    Page<User> getUsers(int page, int size){
+//        // creating sorting order for the query
+//        List<Sort.Order> orders = new ArrayList<Sort.Order>()
+//        // as an example, we are sorting by id
+//        orders << new Sort.Order("id", Sort.Order.Direction.ASC, false)
+//        // now create the pageable object
+//        def pages = Pageable.from(page, size, Sort.of(orders))
+//
+//        def sliceOfUsers = userRepository.list(pages)
+//
+//        if(sliceOfUsers == null) return []
+//        sliceOfUsers.getContent()
 
-        // def sliceOfUsers = userRepository.list(pages)
-
-        // if(sliceOfUsers == null) return []
-        // sliceOfUsers.getContent()
 
         //userRepository.findAll(page)
-        userRepository.list(page)
+        def pages = Pageable.from(page, size)
+        userRepository.list(pages)
     }
 
     /**
