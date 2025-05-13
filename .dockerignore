@@ -1,5 +1,12 @@
 .gradle
 .idea
+.micronaut
+.gitignore
 build
 Dockerfile
 README.md
+build-image.sh
+rest-test.http
+run-image.sh
+run-mysql.sh
+docker-compose.yml

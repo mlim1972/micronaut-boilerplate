@@ -1,11 +1,11 @@
 # This is a multi-stage build. The first stage is used to build the application
 # and the second stage is used to run the application.
-FROM gradle:7.6.1-jdk11 AS build-env
+FROM gradle:8.14.0-jdk21 AS build-env
 
 # Set build arguments from build-image.sh
-ARG BOILERPLATE_MYSQL_URL
-ARG BOILERPLATE_MYSQL_USER
-ARG BOILERPLATE_MYSQL_PASSWORD
+ARG MYSQL_URL
+ARG MYSQL_USER
+ARG MYSQL_PASSWORD
 
 ARG BOILERPLATE_PORT
 ARG BOILERPLATE_JAVA_OPTS
@@ -28,7 +28,7 @@ RUN gradle build --stacktrace --no-daemon
 
 # Distroless is more secured and smaller than the above images
 # The total size is around 273MB
-FROM gcr.io/distroless/java17-debian11
+FROM gcr.io/distroless/java21-debian12
 
 # create a user and group to run the app
 # not needed when using distroless
