@@ -289,7 +289,9 @@ The following files are added to this branch:
 - [.dockerignore](.dockerignore). This file is used to ignore files when creating the Docker image
 - [build-image.sh](build-image.sh). This file is a reference script used to build the Docker image for the 
   application. This file helps understand the creation of the docker image. The Docker image is created 
-  using the Dockerfile. The **build-image.sh** will likely get called by the CI/CD pipeline
+  using the Dockerfile. The **build-image.sh** will likely get called by the CI/CD pipeline. Take note that
+  the test and the build are separated because the tests use testcontainers to start a MySQL database and
+  using Testcontainers during the image creation was causing issues due to docker in docker
 - [Dockerfile](Dockerfile). This file is used to create the Docker image for the application. The Dockerfile 
   receives environment variables and are mapped via **ARG**. The **build-image.sh and run-image.sh** scripts 
   will pass the environment variables during the build and run of the container respectively. The

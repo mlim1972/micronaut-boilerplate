@@ -18,6 +18,14 @@ if [ "$(docker ps -a -q -f name="$CONTAINER_NAME")" ]; then
   docker rm -f "$CONTAINER_NAME"
 fi
 
+# 1. First run tests with local Docker since the tests
+# use Testcontainers and we cannot do docker in docker
+# (dind) in the Dockerfile.
+./gradlew test
+
+# 2. Only if tests pass, build the image... The MYSQL arguments
+# are not necessary for now because the Dockerfile does not
+# perform any tests since we are performing the test above.
 docker build --add-host="$MYSQL_CONTAINER_NAME:$HOST_IP" \
 --build-arg MYSQL_USER=$MYSQL_USER \
 --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
