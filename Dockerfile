@@ -16,8 +16,8 @@ WORKDIR /home
 # Copy the gradle files over.
 COPY --chown=gradle:gradle . ./
 
-# Compile the application.
-RUN gradle build --stacktrace --no-daemon
+# Compile the application w/o running tests since the tests use Testcontainers
+RUN gradle build --stacktrace --no-daemon -x test
 
 
 ### Run stage ###
