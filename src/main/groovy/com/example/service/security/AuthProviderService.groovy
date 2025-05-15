@@ -94,8 +94,7 @@ class AuthProviderService implements AuthenticationProvider {
      * @return The AuthenticationResponse with the username and roles
      */
     private AuthenticationResponse createSuccessfulAuthenticationResponse(User user) {
-        Set<String> authorities = [] as Set<String>
-        if(user.roles) user.roles.collect { it.authority } as Set<String>
+        Set<String> authorities = user.roles?.collect { it.authority } as Set ?: [] as Set
 
         AuthenticationResponse.success(user.username, authorities)
     }

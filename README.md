@@ -337,12 +337,12 @@ to make the JWT integration smoother and to add more tests. The following files 
   by the **JwtAuthenticationFilter** to authenticate the user. The **authenticate** method will call
   the **findByUsername** to find the user in the database. If the user is valid, the method checks the state
   of the user and if the user is active, the method will return a **AuthenticationResponse** that is successful.
-- [application.yml](/src/main/resources/application.yml). This file was changed to add the JWT expiration and
+- [application.properties](/src/main/resources/application.properties). This file was changed to add the JWT expiration and
   to explicitly disabling cookie based authentication. The JWT expiration is set to 5 hours
 - [client/AppClient](/src/main/groovy/com/example/client/AppClient.groovy). This is a new interface that represents
-  a declarative use of the HTTP Client in micronaut. This interface is used by the **HelloControllerSpec** to call
-  the login and authenticate via this declarative interface. The non-declarative way is still valid via the
-  normal **HttpClient** class
+  a declarative use of the HTTP Client in micronaut. This interface is used by the 
+  **DeclarativeHttpClientWithJwtSpec** to call the login and authenticate via this declarative interface. 
+  The non-declarative way is still valid via the normal **HttpClient** class via **HelloControllerSpec**.
 - [controller/DeclarativeHttpClientWithJwtSpec](/src/test/groovy/com/example/controller/DeclarativeHttpClientWithJwtSpec.groovy).
   This class was added to test the **AppClient** interface. The **AppClient** interface is used to call the login
   and authenticate endpoints. The **AppClient** interface is used to call the login endpoint to get a JWT token.
