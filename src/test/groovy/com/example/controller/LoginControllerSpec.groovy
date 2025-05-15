@@ -95,7 +95,7 @@ class LoginControllerSpec extends Specification{
 
     void 'Accessing a secured URL with an invalid token returns unauthorized'() {
         when:
-        HttpRequest requestWithAuthorization = HttpRequest.GET('/hello')
+        HttpRequest requestWithAuthorization = HttpRequest.GET('/hello/protected')
                 .accept(TEXT_PLAIN)
                 .bearerAuth("invalid_jwt_token") // Provide an invalid token
         client.toBlocking().exchange(requestWithAuthorization, String)
