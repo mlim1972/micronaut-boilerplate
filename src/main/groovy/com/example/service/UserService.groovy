@@ -7,6 +7,7 @@ import groovy.util.logging.Slf4j
 import io.micronaut.data.model.Page
 import io.micronaut.data.model.Pageable
 import io.micronaut.data.model.Sort
+import io.micronaut.transaction.annotation.ReadOnly
 import jakarta.inject.Singleton
 
 import jakarta.persistence.EntityManager
@@ -18,9 +19,15 @@ import jakarta.transaction.Transactional
  * Service. This takes care of password encoding and other facilities
  */
 @Singleton
-@Transactional
 @Slf4j
 class UserService {
+    // These are the fields that are not updatable
+    private static NonUpdatableFields = [
+            "dateCreated", "dateUpdated", "enabled",
+            "accountExpired", "accountLocked",
+            "passwordExpired"
+    ]
+
     // the UserRepository. This is the low level access to the User table
     UserRepository userRepository
     // EntityManager to control the optimistic locking
@@ -42,6 +49,7 @@ class UserService {
      * @param detached if the user should be detached from the EntityManager
      * @return the User entity or null if not found
      */
+    @ReadOnly
     User getUser(Long id, Boolean detached=true) {
         def user = entityManager.find(User.class, id, LockModeType.NONE)
         if(!user) return null
@@ -53,6 +61,7 @@ class UserService {
      * This method finds a user from the username
      * @return the user from the DB. Otherwise, it returns null
      */
+    @ReadOnly
     User findByUsername(String username) {
         try{
             userRepository.findOneByUsername(username)
@@ -67,6 +76,7 @@ class UserService {
      * @param size is the size of the page
      * @return a Page of users. This page can continue if needed
      */
+    @ReadOnly
     Page<User> getUsers(int page, int size){
         // // if we need to order the page by a single field, we can do this:
         // // def sortOrder = Sort.Order.asc("id")
@@ -94,8 +104,14 @@ class UserService {
      */
     private User dealWithProps(User user, Map props){
         props.each{ k, v ->
-            if(k == "password"){
-                v = passwordEconder.encode(v as String)
+            switch(k){
+                case NonUpdatableFields.contains(k):
+                    break
+                case "password":
+                    v = passwordEconder.encode(v as String)
+                    break
+                default:
+                    break
             }
             user.setProperty(k,v)
         }
@@ -108,6 +124,7 @@ class UserService {
      * @param detached if the user should be detached from the EntityManager
      * @return the user that is saved in the DB
      */
+    @Transactional
     User saveUser(Map props, Boolean detached=true){
         User user = dealWithProps(new User(), props)
         entityManager.persist(user)
@@ -129,6 +146,7 @@ class UserService {
      * @param detached if the user should be detached from the EntityManager
      * @return the User information
      */
+    @Transactional
     User updateUser(Long id, Map props, Boolean detached=true){
         def entity = userRepository.findById(id)
 
@@ -157,6 +175,7 @@ class UserService {
      * the delete always succeed even if it is not found.
      * @param id the user ID to be deleted
      */
+    @Transactional
     void deleteUser(long id) {
         def entity = userRepository.findById(id)
 

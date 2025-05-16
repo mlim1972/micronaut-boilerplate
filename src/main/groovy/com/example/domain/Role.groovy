@@ -1,5 +1,7 @@
 package com.example.domain
 
+import com.example.jsonview.ApiView
+import com.fasterxml.jackson.annotation.JsonView
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 import io.micronaut.serde.annotation.Serdeable
@@ -15,6 +17,7 @@ import jakarta.validation.constraints.NotNull
 @ToString
 @Serdeable
 @EqualsAndHashCode
+@JsonView(ApiView.Public.class)
 class Role implements Serializable{
     private static final long serialVersionUID = 1L
 
@@ -23,6 +26,7 @@ class Role implements Serializable{
     Long id
 
     @Version
+    @JsonView(ApiView.Internal.class)
     Long version = 0L
 
     @NotNull

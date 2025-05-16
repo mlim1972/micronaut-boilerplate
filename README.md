@@ -354,3 +354,32 @@ JWT information can be found in this great article:
 https://guides.micronaut.io/latest/micronaut-security-jwt-gradle-groovy.html 
 
 The article above also covers how to generate a refresh token. The refresh token is not implemented in this project.
+
+### 6.JsonView
+This branch adds the JsonView feature to the application. The JsonView feature is used to control which 
+properties of a Domain object are serialized into JSON when returning a response from a controller. 
+This is useful when you want to expose different levels of detail to different clients or roles.
+
+The following files were added or modified in this branch:
+
+- [ApiView.groovy](/src/main/groovy/com/example/jsonview/ApiView.groovy): 
+  This file defines the different JsonView classes. In this example, there are two views: `Public` and `Internal`. 
+  The `Internal` view extends the `Public` view, meaning it includes all the properties of the `Public` view plus 
+  some additional properties.
+- [User.groovy](/src/main/groovy/com/example/domain/User.groovy): The `User` domain class is updated to use 
+  the `@JsonView` annotation. This annotation specifies which view a property should be included in. 
+  For example, the `password` property is only included in the `Internal` view, while the `firstName`, `lastName`, 
+  and `username` properties are included in the `Public` view.
+- [Role.groovy](/src/main/groovy/com/example/domain/Role.groovy): The `Role` domain class is updated to use 
+  the `@JsonView` annotation. This annotation specifies which view a property should be included in. 
+  For example, the `version` property is only included in the `Internal` view.
+- [UserController.groovy](/src/main/groovy/com/example/controller/UserController.groovy): The `UserController` is 
+  updated to use the `@JsonView` annotation on the controller methods. This annotation specifies which view should be 
+  used when serializing the response. For example, the `getUsers` and `getUser` methods use the `ApiView.Public.class` 
+  view, while other methods could use the `ApiView.Internal.class` if they existed and needed to expose internal 
+  properties.
+- [application.properties](/src/main/resources/application.properties): The `micronaut.serde.json-view-enabled` 
+  property is set to `true` to enable JsonView support.
+- [README.md](README.md): The README file is updated to include information about the JsonView feature and how to use it.
+
+With these changes, the application can now control which properties are serialized into JSON based on the specified view. This allows for more fine-grained control over the data that is exposed to clients.

@@ -16,6 +16,9 @@ import io.micronaut.scheduling.TaskExecutors
 import io.micronaut.scheduling.annotation.ExecuteOn
 import io.micronaut.security.annotation.Secured
 
+import com.example.jsonview.ApiView
+import com.fasterxml.jackson.annotation.JsonView
+
 /**
  * This is the controller endpoint for User
  */
@@ -41,6 +44,7 @@ class UserController {
      * List<User> getUsers(@Nullable @QueryValue Integer start=0, @Nullable @QueryValue Integer end=10)
      */
     @Get
+    @JsonView(ApiView.Public.class)
     @ExecuteOn(TaskExecutors.BLOCKING)
     List<User> getUsers(@Nullable @QueryValue(defaultValue = "0") Integer page,
                         @Nullable @QueryValue(defaultValue = "100") Integer size) {
@@ -58,6 +62,7 @@ class UserController {
      */
     @ExecuteOn(TaskExecutors.BLOCKING)
     @Get("/{id}")
+    @JsonView(ApiView.Public.class)
     User getUser(Long id) {
         userService.getUser(id)
     }
@@ -71,6 +76,7 @@ class UserController {
      * @throws Exception if any problem arise during the update
      */
     @Put("/{id}")
+    @JsonView(ApiView.Public.class)
     User updateUser(Long id, @Body Map props) throws Exception {
         userService.updateUser(id, props)
     }
@@ -81,6 +87,7 @@ class UserController {
      * @return The saved user with the new properties
      */
     @Post
+    @JsonView(ApiView.Public.class)
     User addUser(@Body Map props) {
         userService.saveUser(props)
     }
