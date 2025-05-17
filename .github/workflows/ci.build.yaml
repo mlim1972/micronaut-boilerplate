@@ -1,0 +1,48 @@
+  name: CI
+
+  on:
+    # we only care about the Dev branch to do CI
+    push:
+      branches: [ dev ]
+    pull_request:
+      branches: [ dev ]
+
+  jobs:
+
+    build:
+      name: Build the Docker Image
+
+      runs-on: ${{ matrix.os }}
+      strategy:
+        matrix:
+          # Use the latest LTS release of Ubuntu
+          os: [ubuntu-20.04]
+      env:
+        # These environment variables come from GitHub Secrets. Configure them!!!
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      steps:
+        # Checkout the code from the branch it is coming from
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        # Set the environment variables directly from our bash script
+        - name: Set environment variables
+          run: |
+            source set-env-vars.sh
+            ./set-gh-actions-env-vars.sh
+
+        # Start the DB locally using docker. All of GitHub action VMs have docker already installed
+        - name: Start MySQL db server and set up schema
+          run: ./run-mysql.sh
+
+        # Build the image using docker build
+        - name: Build and tag image
+          run: ./build-image.sh
+
+        # Push the image to ECR. All of GitHub actions VMs have aws-cli already installed
+        - name: Push to ECR
+          run: ./ecr-push-image.sh

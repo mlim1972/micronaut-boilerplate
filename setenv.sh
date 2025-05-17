@@ -2,29 +2,33 @@
 
 # Set host inet ip
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  echo "Running Mac"
-  hostIp=$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | awk 'END{print}')
-elif [[ "$OSTYPE" == "linux"* ]]; then
-  echo "Running Linux"
-  hostIp=$(hostname -I | awk -v OFS=' ' '{print $1}')
+  hostIp=$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}')
 else
-  echo "Unknown OS"
-  exit 1
+  hostIp=$(hostname -I | awk -v OFS=' ' '{print $1}')
 fi
 
-# set host ip and name
-export HOST_IP=$hostIp
-export HOST_NAME=boilerplate
+# get version from build.gradle
+version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/"//g')
+#version=1.0
 
 # AWS info
-export AWS_ACCOUNT_NUMBER=xxxxxxxxxx
-export AWS_DEFAULT_REGION=us-west-2
+if [ -z "${AWS_ACCOUNT_NUMBER}" ]; then
+  export AWS_ACCOUNT_NUMBER=xxxxxxxxxx
+else
+  echo "‘AWS_ACCOUNT_NUMBER’ variable is set to: $AWS_ACCOUNT_NUMBER"
+fi
 
-# Container and image name
-export CONTAINER_NAME=micronaut-boilerplate
-export IMAGE_NAME=micronaut-boilerplate-image
+if [ -z "${AWS_REGION}" ]; then
+  export AWS_REGION=us-west-2
+else
+  echo "‘AWS_REGION’ variable is set to: AWS_DEFAULT_REGION"
+fi
 
-# MySQL Container name running on host
+export IMAGE_VERSION=$version
+
+# Set docker container env vars
+export CONTAINER_NAME=demo-instance
+export IMAGE_NAME=my-demo
 export MYSQL_CONTAINER_NAME=my-mysql
 
 export BOILERPLATE_PORT=8080

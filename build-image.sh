@@ -3,7 +3,7 @@
 source setenv.sh
 
 # get version from build.gradle
-version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/"//g')
+#version=$(grep "^version" ./build.gradle | awk -v OFS=' ' '{print $3}' | sed 's/"//g')
 
 # Remove previous instance of container
 # If the container exists
@@ -23,15 +23,22 @@ fi
 # (dind) in the Dockerfile.
 ./gradlew test
 
+# if build fails exit with error
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Exiting..."
+  exit 1
+fi
+
 # 2. Only if tests pass, build the image... The MYSQL arguments
 # are not necessary for now because the Dockerfile does not
 # perform any tests since we are performing the test above.
-docker build --add-host="$MYSQL_CONTAINER_NAME:$HOST_IP" \
+docker build --add-host="$MYSQL_CONTAINER_NAME":"$HOST_IP" \
 --build-arg MYSQL_USER=$MYSQL_USER \
 --build-arg MYSQL_PASSWORD=$MYSQL_PASSWORD \
 --build-arg MYSQL_URL=$MYSQL_URL \
 --rm -f "Dockerfile" \
--t "$IMAGE_NAME":"$version-qa" \
+-t "$IMAGE_NAME":"$IMAGE_VERSION-qa" \
+-t "$AWS_ACCOUNT_NUMBER".dkr.ecr.us-west-2.amazonaws.com/"$IMAGE_NAME":"$IMAGE_VERSION-qa" \
 "."
 
 echo "Docker image built: $CONTAINER_NAME"

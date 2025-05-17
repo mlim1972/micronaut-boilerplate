@@ -383,3 +383,42 @@ The following files were added or modified in this branch:
 - [README.md](README.md): The README file is updated to include information about the JsonView feature and how to use it.
 
 With these changes, the application can now control which properties are serialized into JSON based on the specified view. This allows for more fine-grained control over the data that is exposed to clients.
+
+### 7.CI
+This branch adds the CI pipeline to the application. The CI pipeline is used to build, test, and deploy the application.
+The CI pipeline is configured using GitHub Actions. The workflow file is located 
+at '[.github/workflows/ci.build.yaml](.github/workflows/ci.build.yaml)'. This workflow is triggered on pushes and 
+pull requests to the `dev` branch.
+
+The workflow performs the following steps:
+
+1.  **Checkout**: Checks out the code from the repository.
+2.  **Set environment variables**: Sets environment variables required for the build, including AWS credentials 
+and other configuration parameters. It sources `set-env-vars.sh` and `set-gh-actions-env-vars.sh` to set these variables.
+3.  **Start MySQL db server and set up schema**: Starts a MySQL database server using Docker and sets up the database 
+schema. It uses the `run-mysql.sh` script for this purpose.
+4.  **Build and tag image**: Builds the Docker image using the `build-image.sh` script and tags it.
+5.  **Push to ECR**: Pushes the Docker image to Amazon ECR using the `ecr-push-image.sh` script.
+
+**Environment Variables**:
+
+The workflow uses several environment variables that are configured as GitHub Secrets. These include:
+
+*   `AWS_ACCOUNT_ID`: The AWS account ID.
+*   `AWS_REGION`: The AWS region.
+*   `AWS_ACCESS_KEY_ID`: The AWS access key ID.
+*   `AWS_SECRET_ACCESS_KEY`: The AWS secret access key.
+
+These secrets must be configured in the GitHub repository settings for the workflow to function correctly.
+
+**Scripts Used**:
+
+*   `set-env-vars.sh`: Sets environment variables for local development and CI.
+*   `set-gh-actions-env-vars.sh`: Sets environment variables specifically for GitHub Actions, 
+making them available to subsequent steps.
+*   `run-mysql.sh`: Starts a MySQL container, creates the database, and sets up the schema.
+*   `build-image.sh`: Builds the Docker image for the application.
+*   `ecr-push-image.sh`: Pushes the Docker image to Amazon ECR.
+
+This CI pipeline automates the build, test, and deployment process, ensuring that changes to the `dev` branch 
+are automatically built and deployed to Amazon ECR.
