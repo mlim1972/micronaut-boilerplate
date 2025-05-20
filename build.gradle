@@ -57,6 +57,11 @@ dependencies {
 
     aotPlugins platform("io.micronaut.platform:micronaut-platform:4.8.2")
     aotPlugins("io.micronaut.security:micronaut-security-aot")
+
+    // OpenAPI / Swagger
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
+
 }
 
 
@@ -99,4 +104,8 @@ tasks.named("dockerfileNative") {
     jdkVersion = "21"
 }
 
-
+tasks.withType(GroovyCompile) {
+    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+    groovyOptions.forkOptions.jvmArgs.add('-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop')
+    groovyOptions.forkOptions.jvmArgs.add('-Dmicronaut.openapi.additional.files=src/main/resources/swagger')
+}

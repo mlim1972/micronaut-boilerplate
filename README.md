@@ -422,3 +422,30 @@ making them available to subsequent steps.
 
 This CI pipeline automates the build, test, and deployment process, ensuring that changes to the `dev` branch 
 are automatically built and deployed to Amazon ECR.
+
+### 8.OpenAPI
+This branch adds OpenAPI support to the application. The OpenAPI support is used to generate API documentation
+for the application. The OpenAPI documentation is generated using the Micronaut OpenAPI library.
+The following files were added or modified in this branch:
+
+- [Application.groovy](/src/main/groovy/com/example/Application.groovy):
+  - Added `@OpenAPIDefinition` annotation to define the OpenAPI documentation. This includes metadata such as title, version, description, license, and contact information.
+  - Added `@OpenAPIInclude` annotation to include the `LoginController` in the OpenAPI documentation and tag it as "Security".
+  - Added `@SecurityScheme` annotation to define the security scheme for JWT authentication, specifying the type as HTTP, scheme as bearer, and bearer format as JWT.
+- [ProtectedController.groovy](/src/main/groovy/com/example/controller/ProtectedController.groovy):
+  - Added `@SecurityRequirement(name = "BearerAuth")` annotation to specify that the endpoint requires JWT authentication.
+  - Added `@Operation`, `@ApiResponse`, `@Content`, `@Schema`, and `@Tag` annotations to provide detailed information about the API endpoint for the OpenAPI documentation.
+- [build.gradle](build.gradle):
+  - Added dependencies for Micronaut OpenAPI: `io.micronaut.openapi:micronaut-openapi` and `io.micronaut.openapi:micronaut-openapi-annotations`.
+  - Added `annotationProcessor` for `io.micronaut.openapi:micronaut-openapi`.
+  - Added `compileOnly` for `io.micronaut.openapi:micronaut-openapi-annotations`.
+  - Added JVM arguments to the `GroovyCompile` task to enable RapiDoc and Swagger UI and to specify additional files for OpenAPI.
+- [application.properties](src/main/resources/application.properties):
+  - Added configurations to enable and configure static resources for Swagger UI, RapiDoc, and ReDoc.
+  - Added security intercept URL maps to allow anonymous access to Swagger UI, RapiDoc, and ReDoc endpoints.
+- [openapi.properties](openapi.properties):
+  - Added `swagger-ui.enabled=true` to enable Swagger UI.
+- [SwaggerUiSpec.groovy](/src/test/groovy/com/example/swagger/SwaggerUiSpec.groovy):
+  - Added a test to verify that the Swagger UI is available and returns a 200 OK status.
+- [OpenApiGeneratedSpec.groovy](/src/test/groovy/com/example/swagger/OpenApiGeneratedSpec.groovy):
+  - Added a test to verify that the OpenAPI specification is generated and valid.
