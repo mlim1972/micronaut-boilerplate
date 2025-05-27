@@ -449,3 +449,90 @@ The following files were added or modified in this branch:
   - Added a test to verify that the Swagger UI is available and returns a 200 OK status.
 - [OpenApiGeneratedSpec.groovy](/src/test/groovy/com/example/swagger/OpenApiGeneratedSpec.groovy):
   - Added a test to verify that the OpenAPI specification is generated and valid.
+
+### 9-HealthCheck
+#### Health Check and Monitoring
+Micronaut has a management feature that can be added to the [build.gradle](/build.gradle) file.
+Once the library is added, we can enable the management endpoint in the
+[application.properties](/src/main/resources/application.properties) file. Currently, this application
+is only enabling the following endpoints:
+
+- /health -> provides health check information about the application
+- /info -> specific custom info. Right now, there is nothing sent, but you can add your custom information
+- /threaddump -> this sends the thread dump signal for the application
+
+More information and other endpoints can be found in the
+[Micronaut documentation](https://docs.micronaut.io/latest/guide/index.html#management) and
+[Micronaut Micrometer with Prometheus](https://micronaut-projects.github.io/micronaut-micrometer/latest/guide/#metricsAndReportersPrometheus).
+
+In addition to management information, this boilerplate is configured to also provide metric information
+when accessing /metrics. However, to get the full benefit of it, this application has also enabled the
+[prometheus](https://prometheus.io/) endpoint /prometheus so that Prometheus could access the metric information.
+There is no extra configuration or code needed to provide these metrics. To see how the metrics are sent
+to prometheus, a [docker-compose.yml](/prometheus/docker-compose.yml) file is set up under the
+[/prometheus](/prometheus) folder. The docker compose brings up the following services:
+
+- [prometheus](https://prometheus.io/). Provides metrics and alerting.
+- [Node Exporter](https://github.com/prometheus/node_exporter). Provides hardware and OS metrics.
+- [cAdvisor](https://github.com/google/cadvisor). Exposes container and hardware statistics to prometheus.
+- [Grafana](https://grafana.com/). Graph and dashboard that can connect to prometheus.
+
+The [/prometheus/prometheus yml](/prometheus/prometheus.yml) configuration would need to change for your environment.
+Currently, the last line uses an IP address that is likely different from your development environment.
+You need to change this to your own machine's IP (No, localhost will NOT work).
+
+To run the docker compose file, you need to just run it in the command line. Remember to source the 
+[setenv.sh](setenv.sh) file first to set the environment variables.
+
+```shell
+$ source setenv.sh
+$ cd prometheus
+$ docker-compose up
+```
+Prometheus URL: http://localhost:9090/
+
+Grafana URL: http://localhost:3000
+
+Grafana credentials:
+- Username: admin
+- Password: changeme (setup via env. variable **GF_SECURITY_ADMIN_PASSWORD** from the
+  [docker-compose.yml](/prometheus/docker-compose.yml) file)
+
+File changes:
+- [build.gradle](/build.gradle). Added the Micronaut management library to the dependencies.
+- [application.properties](/src/main/resources/application.properties). 
+  Added the management endpoints and enabled the prometheus endpoint.
+- [ExampleInfoSource.groovy](/src/main/groovy/com/example/ExampleInfoSource.groovy).
+  This is an example of how to add custom information to the /info endpoint. This is not used in the application,
+  but it is a good example of how to add custom information.
+- [prometheus/docker-compose.yml](/prometheus/docker-compose.yml).
+  This file is used to run the prometheus, node exporter, cAdvisor, and Grafana services.
+- [prometheus/prometheus.yml](/prometheus/prometheus.yml).
+  This file is used to configure the prometheus service. It specifies the targets to scrape metrics from.
+
+### JMXExporter
+This branch also has changes that add a java agent, ```JMX Exporter``` which runs along with the Java process and 
+serves metrics of the local JVM. The [run-image.sh](run-image.sh) script is updated to expose the JMX port, 9301.
+JMX can be used to check whether the service is up or not by having prometheus scrape the metrics and have some 
+monitoring on the GC events, threads, etc.
+To configure JMX, we need to have a jmx prometheus agent jar file and a configuration file which contains 
+information about what metrics to serve specifically excluding the rest.
+
+To run the java agent, we added the following data into JAVA_OPS in [Dockerfile](Dockerfile):
+```
+-javaagent:jmx_prometheus_javaagent-1.3.0.jar=9103:jmx_config.yml
+```
+
+File changes:
+- [Dockerfile](Dockerfile). Added the JMX Exporter jar file and the configuration file to the Docker image.
+- [jmx_config.yml](jmx_config.yml). This is the configuration file for the JMX Exporter. 
+  It specifies which metrics to expose and how to format them. The configuration file by the JMX Exporter
+  to scrape metrics from the JVM and expose them in a format that Prometheus can understand.
+- [jmx_prometheus_javaagent-1.3.0.jar](https://github.com/prometheus/jmx_exporter). 
+  This is the JMX Exporter jar file used to expose the JVM metrics. The jar file is added to the Docker image
+  and is used by the JMX Exporter to scrape metrics from the JVM.
+- [run-image.sh](/run-image.sh).
+  This file is updated to include the jmx management port. The management port is set to 9103.
+
+More information about JMX Exporter:
+[JMX Exporter](https://github.com/prometheus/jmx_exporter).

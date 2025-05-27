@@ -1,0 +1,70 @@
+
+services:
+  prometheus:
+    hostname: 'monitoring_prometheus'
+    image: prom/prometheus:latest
+    container_name: monitoring_prometheus
+    environment:
+      HOST_IP: "{$HOST_IP}"
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    #      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    #      - '--storage.local.path=/prometheus'
+    #      - '--alertmanager.url=http://alertmanager:9093'
+    expose:
+      - 9090
+    ports:
+      - 9090:9090
+    links:
+      - cadvisor:cadvisor
+      - node-exporter:node-exporter
+
+  node-exporter:
+    hostname: 'monitoring_node_exporter'
+    image: prom/node-exporter:latest
+    container_name: monitoring_node_exporter
+    restart: unless-stopped
+    expose:
+      - 9100
+
+  cadvisor:
+    hostname: 'monitoring_cadvisor'
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: monitoring_cadvisor
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 8500:8080
+
+  grafana:
+    hostname: 'monitoring_grafana'
+    image: grafana/grafana:latest
+    container_name: monitoring_grafana
+    restart: unless-stopped
+    links:
+      - prometheus:prometheus
+    #    volumes:
+    #      - ./data/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=changeme
+      - GF_USERS_ALLOW_SIGN_UP=false
+      #      - GF_SERVER_DOMAIN=myrul.com
+      - GF_SMTP_ENABLED=false
+    #      - GF_SMTP_HOST=smtp.gmail.com:587
+    #      - GF_SMTP_USER=myadrress@gmail.com
+    #      - GF_SMTP_PASSWORD=mypassword
+    #      - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    ports:
+      - 3000:3000

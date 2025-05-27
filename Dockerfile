@@ -19,6 +19,11 @@ COPY --chown=gradle:gradle . ./
 # Compile the application w/o running tests since the tests use Testcontainers
 RUN gradle build --stacktrace --no-daemon -x test
 
+RUN apt-get update && \
+    apt-get install -y wget && \
+    wget https://github.com/prometheus/jmx_exporter/releases/download/1.3.0/jmx_prometheus_javaagent-1.3.0.jar && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ### Run stage ###
 # Other images to consider:
@@ -40,6 +45,9 @@ FROM gcr.io/distroless/java21-debian12
 
 # Copy the compiled files over.
 COPY --from=build-env /home/build/libs/boilerplate-*-all.jar boilerplate.jar
+COPY --from=build-env /home/jmx_prometheus_javaagent-*.jar .
+
+COPY jmx_config.yml .
 
 # Change the owner of the home directory to the new user
 # This is a security best practice. We should not run the app as root.
@@ -52,7 +60,7 @@ COPY --from=build-env /home/build/libs/boilerplate-*-all.jar boilerplate.jar
 USER nonroot
 
 # Expose the port
-EXPOSE ${BOILERPLATE_PORT}
+EXPOSE ${BOILERPLATE_PORT} 9103
 
 # Starts the java app
 # if not using distroless, use this:
@@ -60,6 +68,8 @@ EXPOSE ${BOILERPLATE_PORT}
 
 # Distrolesss already have Java installed, so we don't need to specify the java command
 # The command to execute starts with the jar file!
-ENV JDK_JAVA_OPTIONS="$BOILERPLATE_JAVA_OPTS"
+#ENV JDK_JAVA_OPTIONS="$BOILERPLATE_JAVA_OPTS"
+
+ENV JDK_JAVA_OPTIONS="-XX:MaxRAMPercentage=80.0 -XX:+AlwaysPreTouch -javaagent:jmx_prometheus_javaagent-1.3.0.jar=9103:jmx_config.yml ${JAVA_OPTS}"
 CMD ["-jar", "boilerplate.jar"]
 

@@ -1,0 +1,43 @@
+---
+startDelaySeconds: 0
+ssl: false
+lowercaseOutputName: false
+lowercaseOutputLabelNames: false
+
+rules:
+  - pattern: 'java.lang<type=Memory><(\w+)MemoryUsage>(\w+): (\d+)'
+    name: jvm_memory_usage_$2_bytes
+    labels:
+      area: "$1"  # Heap/NonHeap
+    value: $3
+    type: GAUGE
+
+  # name is always the same, the name of the GC
+  - pattern: 'java.lang<type=GarbageCollector, name=[^,]+, key=([^>]+)><LastGcInfo, memoryUsageAfterGc>(used|commited): (\d+)'
+    name: jvm_memory_after_gc_$2_bytes
+    value: $3
+    labels:
+      space: $1
+    type: GAUGE
+
+  - pattern: 'java.lang<type=GarbageCollector, name=[^,]+, key=([^>]+)><LastGcInfo, memoryUsageBeforeGc>(used|commited): (\d+)'
+    name: jvm_memory_before_gc_$2_bytes
+    value: $3
+    labels:
+      space: $1
+    type: GAUGE
+
+  - pattern: 'java.lang<type=GarbageCollector, name=[^>]+><LastGcInfo>duration: (\d+)'
+    name: jvm_gc_duration_seconds
+    value: $1
+    type: GAUGE
+    # Convert microseconds to seconds
+    valueFactor: 0.000001
+
+  # java.lang<type=GarbageCollector, name=G1 Young Generation><>CollectionCount
+  - pattern: 'java.lang<type=GarbageCollector, name=([^>]+)><>CollectionCount: (\d+)'
+    name: jvm_gc_collection_count
+    value: $2
+    labels:
+      name: $1
+    type: GAUGE
